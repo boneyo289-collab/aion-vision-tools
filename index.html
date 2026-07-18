@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AION Vision Tools — 머신비전 계산기</title>
+<link rel="stylesheet" href="assets/styles.css?v=202607182201">
+</head>
+<body>
+<div class="app">
+
+  <!-- ═══ HOME ═══ -->
+  <section id="screen-home" class="screen active">
+    <div class="home-header">
+      <div class="home-logo-row">
+        <img src="assets/aion-logo.png" alt="AION" class="home-logo">
+        <div class="lang-seg">
+          <button type="button" class="lang-seg-btn" data-action="set-lang" data-lang="ko">KO</button>
+          <button type="button" class="lang-seg-btn" data-action="set-lang" data-lang="en">EN</button>
+        </div>
+      </div>
+      <h2 class="home-title" data-label="APP_TITLE"></h2>
+      <p class="home-sub" data-label="APP_SUB"></p>
+    </div>
+    <div class="card-list">
+      <button type="button" class="calc-card" data-action="open" data-target="fov">
+        <span class="calc-card-circle tint-a">01</span>
+        <span class="calc-card-text">
+          <span class="calc-card-name" data-calc-name="fov"></span>
+          <span class="calc-card-desc" data-calc-desc="fov"></span>
+        </span>
+        <span class="calc-card-arrow">→</span>
+      </button>
+      <button type="button" class="calc-card" data-action="open" data-target="exposure">
+        <span class="calc-card-circle tint-b">02</span>
+        <span class="calc-card-text">
+          <span class="calc-card-name" data-calc-name="exposure"></span>
+          <span class="calc-card-desc" data-calc-desc="exposure"></span>
+        </span>
+        <span class="calc-card-arrow">→</span>
+      </button>
+      <button type="button" class="calc-card" data-action="open" data-target="focal">
+        <span class="calc-card-circle tint-a">03</span>
+        <span class="calc-card-text">
+          <span class="calc-card-name" data-calc-name="focal"></span>
+          <span class="calc-card-desc" data-calc-desc="focal"></span>
+        </span>
+        <span class="calc-card-arrow">→</span>
+      </button>
+      <button type="button" class="calc-card" data-action="open" data-target="dof">
+        <span class="calc-card-circle tint-a">04</span>
+        <span class="calc-card-text">
+          <span class="calc-card-name" data-calc-name="dof"></span>
+          <span class="calc-card-desc" data-calc-desc="dof"></span>
+        </span>
+        <span class="calc-card-arrow">→</span>
+      </button>
+      <button type="button" class="calc-card" data-action="open" data-target="linescan">
+        <span class="calc-card-circle tint-b">05</span>
+        <span class="calc-card-text">
+          <span class="calc-card-name" data-calc-name="linescan"></span>
+          <span class="calc-card-desc" data-calc-desc="linescan"></span>
+        </span>
+        <span class="calc-card-arrow">→</span>
+      </button>
+      <div class="coming-soon" data-label="COMING_SOON"></div>
+    </div>
+    <div class="home-footer">AION Vision Tools v0.1 · <span data-label="FOOTER_SUB"></span></div>
+  </section>
+
+  <!-- ═══ 01 FoV·작동거리 ═══ -->
+  <section id="screen-fov" class="screen" data-calc="fov">
+    <div class="calc-header">
+      <button type="button" class="btn btn-icon btn-secondary" data-action="home">←</button>
+      <div class="calc-title">
+        <div class="calc-kicker" data-calc-kicker="fov"></div>
+        <div class="calc-name" data-calc-name="fov"></div>
+      </div>
+    </div>
+    <div class="calc-body">
+      <div class="field">
+        <label for="fov-camera" data-label="CAMERA_MODEL"></label>
+        <div class="field-input">
+          <select class="input" id="fov-camera">
+            <option value="">직접 입력</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-grid">
+        <div class="field">
+          <label for="fov-pxs" data-field-label="fov:input:pxs"></label>
+          <div class="field-input">
+            <input class="input" id="fov-pxs" type="number" inputmode="decimal" step="any" value="3.45">
+            <span class="unit-label">㎛</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="fov-f" data-field-label="fov:input:f"></label>
+          <div class="field-input">
+            <input class="input" id="fov-f" type="number" inputmode="decimal" step="any" value="16">
+            <span class="unit-label">mm</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="fov-rw" data-field-label="fov:input:rw"></label>
+          <div class="field-input">
+            <input class="input" id="fov-rw" type="number" inputmode="decimal" step="any" value="2448">
+            <span class="unit-label">px</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="fov-rh" data-field-label="fov:input:rh"></label>
+          <div class="field-input">
+            <input class="input" id="fov-rh" type="number" inputmode="decimal" step="any" value="2048">
+            <span class="unit-label">px</span>
+          </div>
+        </div>
+        <div class="field span-2">
+          <label for="fov-wd" data-field-label="fov:input:wd"></label>
+          <div class="field-input">
+            <input class="input" id="fov-wd" type="number" inputmode="decimal" step="any" value="300">
+            <span class="unit-label">mm</span>
+          </div>
+        </div>
+      </div>
+      <p class="calc-note" data-calc-note="fov"></p>
+    </div>
+    <div class="result-panel">
+      <div class="result-kicker" data-label="RESULTS_HEADER"></div>
+      <p class="result-error" id="fov-error"></p>
+      <div class="result-grid">
+        <div>
+          <div class="result-label" data-field-label="fov:result:fovw"></div>
+          <div class="result-value"><span id="fov-result-fovw">—</span> <span class="result-unit">mm</span></div>
+        </div>
+        <div>
+          <div class="result-label" data-field-label="fov:result:fovh"></div>
+          <div class="result-value"><span id="fov-result-fovh">—</span> <span class="result-unit">mm</span></div>
+        </div>
+        <div>
+          <div class="result-label" data-field-label="fov:result:r"></div>
+          <div class="result-value"><span id="fov-result-r">—</span> <span class="result-unit">㎛/px</span></div>
+        </div>
+        <div>
+          <div class="result-label" data-field-label="fov:result:m"></div>
+          <div class="result-value"><span id="fov-result-m">—</span></div>
+        </div>
+      </div>
+      <div class="chain-buttons">
+        <button type="button" class="btn chain-btn" id="fov-chain-exposure" data-action="chain" data-chain="exposure" data-label="CHAIN_EXPOSURE" disabled></button>
+        <button type="button" class="btn chain-btn" id="fov-chain-linescan" data-action="chain" data-chain="linescan" data-label="CHAIN_LINESCAN" disabled></button>
+        <button type="button" class="btn chain-btn" id="fov-chain-dof" data-action="chain" data-chain="dof" data-label="CHAIN_DOF" disabled></button>
+      </div>
+      <div class="export-wrap">
+        <div class="export-menu" id="fov-export-menu" hidden>
+          <button type="button" class="btn chain-btn" data-action="export-share" data-label="SHARE" hidden></button>
+          <button type="button" class="btn chain-btn" data-action="export-csv" data-label="CSV_SAVE"></button>
+          <button type="button" class="btn chain-btn" data-action="export-png" data-label="PNG_SAVE"></button>
+        </div>
+        <div class="export-row">
+          <button type="button" class="btn chain-btn export-btn" id="fov-copy-btn" data-action="copy-result" data-label="COPY" disabled></button>
+          <button type="button" class="btn btn-gold export-btn" id="fov-export-btn" data-action="export-result" data-label="EXPORT" disabled></button>
+        </div>
+      </div>
+      <textarea class="copy-fallback" id="fov-copy-fallback" readonly hidden></textarea>
+    </div>
+  </section>
+
+  <!-- ═══ 02 노출 시간 ═══ -->
+  <section id="screen-exposure" class="screen" data-calc="exposure">
+    <div class="calc-header">
+      <button type="button" class="btn btn-icon btn-secondary" data-action="home">←</button>
+      <div class="calc-title">
+        <div class="calc-kicker" data-calc-kicker="exposure"></div>
+        <div class="calc-name" data-calc-name="exposure"></div>
+      </div>
+    </div>
+    <div class="calc-body">
+      <div class="mode-seg">
+        <button type="button" class="mode-seg-btn" data-action="set-mode" data-mode="speed" data-label="MODE_SPEED"></button>
+        <button type="button" class="mode-seg-btn" data-action="set-mode" data-mode="fps" data-label="MODE_FPS"></button>
+      </div>
+      <div class="field-grid" data-mode-group="speed">
+        <div class="field">
+          <label for="exposure-speed" data-field-label="exposure:input:speed"></label>
+          <div class="field-input">
+            <input class="input" id="exposure-speed" type="number" inputmode="decimal" step="any" value="500">
+            <span class="unit-label">mm/s</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="exposure-r" data-field-label="exposure:input:r"></label>
+          <div class="field-input">
+            <input class="input" id="exposure-r" type="number" inputmode="decimal" step="any" value="65">
+            <span class="unit-label">㎛/px</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-grid" data-mode-group="fps">
+        <div class="field span-2">
+          <label for="exposure-fps" data-field-label="exposure:input:fps"></label>
+          <div class="field-input">
+            <input class="input" id="exposure-fps" type="number" inputmode="decimal" step="any" value="100">
+            <span class="unit-label">fps</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-grid">
+        <div class="field span-2">
+          <label for="exposure-margin" data-field-label="exposure:input:margin"></label>
+          <div class="field-input">
+            <input class="input" id="exposure-margin" type="number" inputmode="decimal" step="any" value="6">
+            <span class="unit-label">㎲</span>
+          </div>
+        </div>
+      </div>
+      <p class="calc-note" data-calc-note="exposure"></p>
+    </div>
+    <div class="result-panel">
+      <div class="result-kicker" data-label="RESULTS_HEADER"></div>
+      <p class="result-error" id="exposure-error"></p>
+      <div class="result-grid">
+        <div>
+          <div class="result-label" data-field-label="exposure:result:ttheo"></div>
+          <div class="result-value"><span id="exposure-result-ttheo">—</span> <span class="result-unit">㎲</span></div>
+        </div>
+        <div>
+          <div class="result-label" data-field-label="exposure:result:trec"></div>
+          <div class="result-value"><span id="exposure-result-trec">—</span> <span class="result-unit">㎲</span></div>
+        </div>
+      </div>
+      <div class="export-wrap">
+        <div class="export-menu" id="exposure-export-menu" hidden>
+          <button type="button" class="btn chain-btn" data-action="export-share" data-label="SHARE" hidden></button>
+          <button type="button" class="btn chain-btn" data-action="export-csv" data-label="CSV_SAVE"></button>
+          <button type="button" class="btn chain-btn" data-action="export-png" data-label="PNG_SAVE"></button>
+        </div>
+        <div class="export-row">
+          <button type="button" class="btn chain-btn export-btn" id="exposure-copy-btn" data-action="copy-result" data-label="COPY" disabled></button>
+          <button type="button" class="btn btn-gold export-btn" id="exposure-export-btn" data-action="export-result" data-label="EXPORT" disabled></button>
+        </div>
+      </div>
+      <textarea class="copy-fallback" id="exposure-copy-fallback" readonly hidden></textarea>
+    </div>
+  </section>
+
+  <!-- ═══ 03 초점거리 선정 ═══ -->
+  <section id="screen-focal" class="screen" data-calc="focal">
+    <div class="calc-header">
+      <button type="button" class="btn btn-icon btn-secondary" data-action="home">←</button>
+      <div class="calc-title">
+        <div class="calc-kicker" data-calc-kicker="focal"></div>
+        <div class="calc-name" data-calc-name="focal"></div>
+      </div>
+    </div>
+    <div class="calc-body">
+      <div class="field">
+        <label for="focal-camera" data-label="CAMERA_MODEL"></label>
+        <div class="field-input">
+          <select class="input" id="focal-camera">
+            <option value="">직접 입력</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-grid">
+        <div class="field">
+          <label for="focal-pxs" data-field-label="focal:input:pxs"></label>
+          <div class="field-input">
+            <input class="input" id="focal-pxs" type="number" inputmode="decimal" step="any" value="3.45">
+            <span class="unit-label">㎛</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="focal-rw" data-field-label="focal:input:rw"></label>
+          <div class="field-input">
+            <input class="input" id="focal-rw" type="number" inputmode="decimal" step="any" value="2448">
+            <span class="unit-label">px</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="focal-rh" data-field-label="focal:input:rh"></label>
+          <div class="field-input">
+            <input class="input" id="focal-rh" type="number" inputmode="decimal" step="any" value="2048">
+            <span class="unit-label">px</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="focal-wd" data-field-label="focal:input:wd"></label>
+          <div class="field-input">
+            <input class="input" id="focal-wd" type="number" inputmode="decimal" step="any" value="300">
+            <span class="unit-label">mm</span>
+          </div>
+        </div>
+        <div class="field span-2">
+          <label for="focal-fov" data-field-label="focal:input:fov"></label>
+          <div class="field-input">
+            <input class="input" id="focal-fov" type="number" inputmode="decimal" step="any" value="150">
+            <span class="unit-label">mm</span>
+          </div>
+        </div>
+      </div>
+      <p class="calc-note" data-calc-note="focal"></p>
+    </div>
+    <div class="result-panel">
+      <div class="result-kicker" data-label="RESULTS_HEADER"></div>
+      <p class="result-error" id="focal-error"></p>
+      <div class="result-grid">
+        <div>
+          <div class="result-label" data-field-label="focal:result:f"></div>
+          <div class="result-value"><span id="focal-result-f">—</span> <span class="result-unit">mm</span></div>
+        </div>
+        <div>
+          <div class="result-label" data-field-label="focal:result:m"></div>
+          <div class="result-value"><span id="focal-result-m">—</span></div>
+        </div>
+      </div>
+      <div class="export-wrap">
+        <div class="export-menu" id="focal-export-menu" hidden>
+          <button type="button" class="btn chain-btn" data-action="export-share" data-label="SHARE" hidden></button>
+          <button type="button" class="btn chain-btn" data-action="export-csv" data-label="CSV_SAVE"></button>
+          <button type="button" class="btn chain-btn" data-action="export-png" data-label="PNG_SAVE"></button>
+        </div>
+        <div class="export-row">
+          <button type="button" class="btn chain-btn export-btn" id="focal-copy-btn" data-action="copy-result" data-label="COPY" disabled></button>
+          <button type="button" class="btn btn-gold export-btn" id="focal-export-btn" data-action="export-result" data-label="EXPORT" disabled></button>
+        </div>
+      </div>
+      <textarea class="copy-fallback" id="focal-copy-fallback" readonly hidden></textarea>
+    </div>
+  </section>
+
+  <!-- ═══ 04 피사계 심도 ═══ -->
+  <section id="screen-dof" class="screen" data-calc="dof">
+    <div class="calc-header">
+      <button type="button" class="btn btn-icon btn-secondary" data-action="home">←</button>
+      <div class="calc-title">
+        <div class="calc-kicker" data-calc-kicker="dof"></div>
+        <div class="calc-name" data-calc-name="dof"></div>
+      </div>
+    </div>
+    <div class="calc-body">
+      <div class="field-grid">
+        <div class="field">
+          <label for="dof-n" data-field-label="dof:input:n"></label>
+          <div class="field-input">
+            <input class="input" id="dof-n" type="number" inputmode="decimal" step="any" value="4">
+            <span class="unit-label">F</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="dof-pxs" data-field-label="dof:input:pxs"></label>
+          <div class="field-input">
+            <input class="input" id="dof-pxs" type="number" inputmode="decimal" step="any" value="3.45">
+            <span class="unit-label">㎛</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="dof-k" data-field-label="dof:input:k"></label>
+          <div class="field-input">
+            <input class="input" id="dof-k" type="number" inputmode="decimal" step="any" value="2">
+            <span class="unit-label"></span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="dof-m" data-field-label="dof:input:m"></label>
+          <div class="field-input">
+            <input class="input" id="dof-m" type="number" inputmode="decimal" step="any" value="0.056">
+            <span class="unit-label" data-field-unit="dof:input:m"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="result-panel">
+      <div class="result-kicker" data-label="RESULTS_HEADER"></div>
+      <p class="result-error" id="dof-error"></p>
+      <div class="result-grid">
+        <div>
+          <div class="result-label" data-field-label="dof:result:half"></div>
+          <div class="result-value"><span id="dof-result-half">—</span> <span class="result-unit">mm</span></div>
+        </div>
+        <div>
+          <div class="result-label" data-field-label="dof:result:total"></div>
+          <div class="result-value"><span id="dof-result-total">—</span> <span class="result-unit">mm</span></div>
+        </div>
+        <div>
+          <div class="result-label" data-field-label="dof:result:coc"></div>
+          <div class="result-value"><span id="dof-result-coc">—</span> <span class="result-unit">mm</span></div>
+        </div>
+      </div>
+      <div class="export-wrap">
+        <div class="export-menu" id="dof-export-menu" hidden>
+          <button type="button" class="btn chain-btn" data-action="export-share" data-label="SHARE" hidden></button>
+          <button type="button" class="btn chain-btn" data-action="export-csv" data-label="CSV_SAVE"></button>
+          <button type="button" class="btn chain-btn" data-action="export-png" data-label="PNG_SAVE"></button>
+        </div>
+        <div class="export-row">
+          <button type="button" class="btn chain-btn export-btn" id="dof-copy-btn" data-action="copy-result" data-label="COPY" disabled></button>
+          <button type="button" class="btn btn-gold export-btn" id="dof-export-btn" data-action="export-result" data-label="EXPORT" disabled></button>
+        </div>
+      </div>
+      <textarea class="copy-fallback" id="dof-copy-fallback" readonly hidden></textarea>
+    </div>
+  </section>
+
+  <!-- ═══ 05 라인스캔 ═══ -->
+  <section id="screen-linescan" class="screen" data-calc="linescan">
+    <div class="calc-header">
+      <button type="button" class="btn btn-icon btn-secondary" data-action="home">←</button>
+      <div class="calc-title">
+        <div class="calc-kicker" data-calc-kicker="linescan"></div>
+        <div class="calc-name" data-calc-name="linescan"></div>
+      </div>
+    </div>
+    <div class="calc-body">
+      <div class="field-grid">
+        <div class="field">
+          <label for="linescan-speed" data-field-label="linescan:input:speed"></label>
+          <div class="field-input">
+            <input class="input" id="linescan-speed" type="number" inputmode="decimal" step="any" value="1000">
+            <span class="unit-label">mm/s</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="linescan-r" data-field-label="linescan:input:r"></label>
+          <div class="field-input">
+            <input class="input" id="linescan-r" type="number" inputmode="decimal" step="any" value="97.65625">
+            <span class="unit-label">㎛/px</span>
+          </div>
+        </div>
+      </div>
+      <p class="calc-note" data-calc-note="linescan"></p>
+    </div>
+    <div class="result-panel">
+      <div class="result-kicker" data-label="RESULTS_HEADER"></div>
+      <p class="result-error" id="linescan-error"></p>
+      <div class="result-grid">
+        <div>
+          <div class="result-label" data-field-label="linescan:result:rate"></div>
+          <div class="result-value"><span id="linescan-result-rate">—</span> <span class="result-unit">kHz</span></div>
+        </div>
+        <div>
+          <div class="result-label" data-field-label="linescan:result:period"></div>
+          <div class="result-value"><span id="linescan-result-period">—</span> <span class="result-unit">㎲</span></div>
+        </div>
+      </div>
+      <div class="export-wrap">
+        <div class="export-menu" id="linescan-export-menu" hidden>
+          <button type="button" class="btn chain-btn" data-action="export-share" data-label="SHARE" hidden></button>
+          <button type="button" class="btn chain-btn" data-action="export-csv" data-label="CSV_SAVE"></button>
+          <button type="button" class="btn chain-btn" data-action="export-png" data-label="PNG_SAVE"></button>
+        </div>
+        <div class="export-row">
+          <button type="button" class="btn chain-btn export-btn" id="linescan-copy-btn" data-action="copy-result" data-label="COPY" disabled></button>
+          <button type="button" class="btn btn-gold export-btn" id="linescan-export-btn" data-action="export-result" data-label="EXPORT" disabled></button>
+        </div>
+      </div>
+      <textarea class="copy-fallback" id="linescan-copy-fallback" readonly hidden></textarea>
+    </div>
+  </section>
+
+  <div class="toast" id="toast"></div>
+</div>
+<script type="module" src="src/app.js?v=202607182201"></script>
+</body>
+</html>
