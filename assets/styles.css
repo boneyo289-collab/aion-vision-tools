@@ -113,8 +113,13 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
 }
 .home-logo-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .home-logo { width: 90px; filter: invert(1); }
+.home-header-right { display: flex; align-items: center; gap: 12px; }
 .home-title { font-size: 27px; margin: 0 0 5px; color: var(--color-bg); }
 .home-sub { margin: 0; font-size: 13px; color: rgba(245, 244, 241, .6); }
+
+.date-badge { font-size: 11px; white-space: nowrap; }
+.home-date { color: rgba(245, 244, 241, .55); }
+.calc-date { color: var(--color-neutral-600); padding-left: 8px; }
 
 .lang-seg { display: inline-flex; border: 1px solid rgba(245, 244, 241, .35); border-radius: 999px; overflow: hidden; }
 .lang-seg-btn {
@@ -141,7 +146,6 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
 .calc-card-circle.tint-b { background: var(--color-accent-2-100); color: var(--color-accent-2-700); }
 .calc-card-text { flex: 1; }
 .calc-card-name { font-size: 15px; font-weight: 600; }
-.calc-card-desc { font-size: 12px; color: var(--color-neutral-700); }
 .calc-card-arrow { color: var(--color-neutral-600); }
 
 .coming-soon {
@@ -217,30 +221,6 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
 }
 .chain-btn:hover:not(:disabled) { background: rgba(245, 244, 241, .12); }
 .chain-btn:disabled { opacity: .4; cursor: not-allowed; }
-
-/* — 결과 내보내기 — */
-.export-wrap { margin-top: 10px; }
-.export-menu { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-.export-menu[hidden] { display: none; }
-.export-row { display: flex; gap: 10px; }
-.export-btn { flex: 1 1 auto; min-height: 44px; min-width: 0; font-size: 13px; padding: 8px 14px; }
-.btn-gold { background: var(--color-accent); color: var(--color-text); border: none; }
-.btn-gold:hover:not(:disabled) { background: #c79020; }
-.btn-gold:disabled { opacity: .4; cursor: not-allowed; }
-
-.copy-fallback {
-  width: 100%; margin-top: 10px; min-height: 70px; padding: 10px 12px; font: inherit; font-size: 12px;
-  color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-divider);
-  border-radius: var(--radius-md); resize: vertical;
-}
-
-.toast {
-  position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
-  background: var(--color-accent); color: var(--color-text); font-size: 13px; font-weight: 600;
-  padding: 10px 20px; border-radius: 999px; box-shadow: var(--shadow-lg); z-index: 50;
-  opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease;
-}
-.toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* — 반응형 — */
 @media (max-width: 380px) {

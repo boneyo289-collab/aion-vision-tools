@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AION Vision Tools — 머신비전 계산기</title>
-<link rel="stylesheet" href="assets/styles.css?v=202607182201">
+<link rel="stylesheet" href="assets/styles.css?v=202607190815">
 </head>
 <body>
 <div class="app">
@@ -14,9 +14,12 @@
     <div class="home-header">
       <div class="home-logo-row">
         <img src="assets/aion-logo.png" alt="AION" class="home-logo">
-        <div class="lang-seg">
-          <button type="button" class="lang-seg-btn" data-action="set-lang" data-lang="ko">KO</button>
-          <button type="button" class="lang-seg-btn" data-action="set-lang" data-lang="en">EN</button>
+        <div class="home-header-right">
+          <span class="date-badge home-date" data-role="today-date"></span>
+          <div class="lang-seg">
+            <button type="button" class="lang-seg-btn" data-action="set-lang" data-lang="ko">KO</button>
+            <button type="button" class="lang-seg-btn" data-action="set-lang" data-lang="en">EN</button>
+          </div>
         </div>
       </div>
       <h2 class="home-title" data-label="APP_TITLE"></h2>
@@ -27,7 +30,6 @@
         <span class="calc-card-circle tint-a">01</span>
         <span class="calc-card-text">
           <span class="calc-card-name" data-calc-name="fov"></span>
-          <span class="calc-card-desc" data-calc-desc="fov"></span>
         </span>
         <span class="calc-card-arrow">→</span>
       </button>
@@ -35,7 +37,6 @@
         <span class="calc-card-circle tint-b">02</span>
         <span class="calc-card-text">
           <span class="calc-card-name" data-calc-name="exposure"></span>
-          <span class="calc-card-desc" data-calc-desc="exposure"></span>
         </span>
         <span class="calc-card-arrow">→</span>
       </button>
@@ -43,7 +44,6 @@
         <span class="calc-card-circle tint-a">03</span>
         <span class="calc-card-text">
           <span class="calc-card-name" data-calc-name="focal"></span>
-          <span class="calc-card-desc" data-calc-desc="focal"></span>
         </span>
         <span class="calc-card-arrow">→</span>
       </button>
@@ -51,7 +51,6 @@
         <span class="calc-card-circle tint-a">04</span>
         <span class="calc-card-text">
           <span class="calc-card-name" data-calc-name="dof"></span>
-          <span class="calc-card-desc" data-calc-desc="dof"></span>
         </span>
         <span class="calc-card-arrow">→</span>
       </button>
@@ -59,7 +58,6 @@
         <span class="calc-card-circle tint-b">05</span>
         <span class="calc-card-text">
           <span class="calc-card-name" data-calc-name="linescan"></span>
-          <span class="calc-card-desc" data-calc-desc="linescan"></span>
         </span>
         <span class="calc-card-arrow">→</span>
       </button>
@@ -68,7 +66,7 @@
     <div class="home-footer">AION Vision Tools v0.1 · <span data-label="FOOTER_SUB"></span></div>
   </section>
 
-  <!-- ═══ 01 FoV·작동거리 ═══ -->
+  <!-- ═══ 01 FOV·WD ═══ -->
   <section id="screen-fov" class="screen" data-calc="fov">
     <div class="calc-header">
       <button type="button" class="btn btn-icon btn-secondary" data-action="home">←</button>
@@ -76,6 +74,7 @@
         <div class="calc-kicker" data-calc-kicker="fov"></div>
         <div class="calc-name" data-calc-name="fov"></div>
       </div>
+      <span class="date-badge calc-date" data-role="today-date"></span>
     </div>
     <div class="calc-body">
       <div class="field">
@@ -130,12 +129,12 @@
       <p class="result-error" id="fov-error"></p>
       <div class="result-grid">
         <div>
-          <div class="result-label" data-field-label="fov:result:fovw"></div>
-          <div class="result-value"><span id="fov-result-fovw">—</span> <span class="result-unit">mm</span></div>
+          <div class="result-label" data-field-label="fov:result:major"></div>
+          <div class="result-value"><span id="fov-result-major">—</span> <span class="result-unit">mm</span></div>
         </div>
         <div>
-          <div class="result-label" data-field-label="fov:result:fovh"></div>
-          <div class="result-value"><span id="fov-result-fovh">—</span> <span class="result-unit">mm</span></div>
+          <div class="result-label" data-field-label="fov:result:minor"></div>
+          <div class="result-value"><span id="fov-result-minor">—</span> <span class="result-unit">mm</span></div>
         </div>
         <div>
           <div class="result-label" data-field-label="fov:result:r"></div>
@@ -151,18 +150,6 @@
         <button type="button" class="btn chain-btn" id="fov-chain-linescan" data-action="chain" data-chain="linescan" data-label="CHAIN_LINESCAN" disabled></button>
         <button type="button" class="btn chain-btn" id="fov-chain-dof" data-action="chain" data-chain="dof" data-label="CHAIN_DOF" disabled></button>
       </div>
-      <div class="export-wrap">
-        <div class="export-menu" id="fov-export-menu" hidden>
-          <button type="button" class="btn chain-btn" data-action="export-share" data-label="SHARE" hidden></button>
-          <button type="button" class="btn chain-btn" data-action="export-csv" data-label="CSV_SAVE"></button>
-          <button type="button" class="btn chain-btn" data-action="export-png" data-label="PNG_SAVE"></button>
-        </div>
-        <div class="export-row">
-          <button type="button" class="btn chain-btn export-btn" id="fov-copy-btn" data-action="copy-result" data-label="COPY" disabled></button>
-          <button type="button" class="btn btn-gold export-btn" id="fov-export-btn" data-action="export-result" data-label="EXPORT" disabled></button>
-        </div>
-      </div>
-      <textarea class="copy-fallback" id="fov-copy-fallback" readonly hidden></textarea>
     </div>
   </section>
 
@@ -174,6 +161,7 @@
         <div class="calc-kicker" data-calc-kicker="exposure"></div>
         <div class="calc-name" data-calc-name="exposure"></div>
       </div>
+      <span class="date-badge calc-date" data-role="today-date"></span>
     </div>
     <div class="calc-body">
       <div class="mode-seg">
@@ -229,22 +217,10 @@
           <div class="result-value"><span id="exposure-result-trec">—</span> <span class="result-unit">㎲</span></div>
         </div>
       </div>
-      <div class="export-wrap">
-        <div class="export-menu" id="exposure-export-menu" hidden>
-          <button type="button" class="btn chain-btn" data-action="export-share" data-label="SHARE" hidden></button>
-          <button type="button" class="btn chain-btn" data-action="export-csv" data-label="CSV_SAVE"></button>
-          <button type="button" class="btn chain-btn" data-action="export-png" data-label="PNG_SAVE"></button>
-        </div>
-        <div class="export-row">
-          <button type="button" class="btn chain-btn export-btn" id="exposure-copy-btn" data-action="copy-result" data-label="COPY" disabled></button>
-          <button type="button" class="btn btn-gold export-btn" id="exposure-export-btn" data-action="export-result" data-label="EXPORT" disabled></button>
-        </div>
-      </div>
-      <textarea class="copy-fallback" id="exposure-copy-fallback" readonly hidden></textarea>
     </div>
   </section>
 
-  <!-- ═══ 03 초점거리 선정 ═══ -->
+  <!-- ═══ 03 WD 계산 ═══ -->
   <section id="screen-focal" class="screen" data-calc="focal">
     <div class="calc-header">
       <button type="button" class="btn btn-icon btn-secondary" data-action="home">←</button>
@@ -252,6 +228,7 @@
         <div class="calc-kicker" data-calc-kicker="focal"></div>
         <div class="calc-name" data-calc-name="focal"></div>
       </div>
+      <span class="date-badge calc-date" data-role="today-date"></span>
     </div>
     <div class="calc-body">
       <div class="field">
@@ -271,6 +248,13 @@
           </div>
         </div>
         <div class="field">
+          <label for="focal-f" data-field-label="focal:input:f"></label>
+          <div class="field-input">
+            <input class="input" id="focal-f" type="number" inputmode="decimal" step="any" value="16">
+            <span class="unit-label">mm</span>
+          </div>
+        </div>
+        <div class="field">
           <label for="focal-rw" data-field-label="focal:input:rw"></label>
           <div class="field-input">
             <input class="input" id="focal-rw" type="number" inputmode="decimal" step="any" value="2448">
@@ -282,13 +266,6 @@
           <div class="field-input">
             <input class="input" id="focal-rh" type="number" inputmode="decimal" step="any" value="2048">
             <span class="unit-label">px</span>
-          </div>
-        </div>
-        <div class="field">
-          <label for="focal-wd" data-field-label="focal:input:wd"></label>
-          <div class="field-input">
-            <input class="input" id="focal-wd" type="number" inputmode="decimal" step="any" value="300">
-            <span class="unit-label">mm</span>
           </div>
         </div>
         <div class="field span-2">
@@ -306,26 +283,14 @@
       <p class="result-error" id="focal-error"></p>
       <div class="result-grid">
         <div>
-          <div class="result-label" data-field-label="focal:result:f"></div>
-          <div class="result-value"><span id="focal-result-f">—</span> <span class="result-unit">mm</span></div>
+          <div class="result-label" data-field-label="focal:result:wd"></div>
+          <div class="result-value"><span id="focal-result-wd">—</span> <span class="result-unit">mm</span></div>
         </div>
         <div>
           <div class="result-label" data-field-label="focal:result:m"></div>
           <div class="result-value"><span id="focal-result-m">—</span></div>
         </div>
       </div>
-      <div class="export-wrap">
-        <div class="export-menu" id="focal-export-menu" hidden>
-          <button type="button" class="btn chain-btn" data-action="export-share" data-label="SHARE" hidden></button>
-          <button type="button" class="btn chain-btn" data-action="export-csv" data-label="CSV_SAVE"></button>
-          <button type="button" class="btn chain-btn" data-action="export-png" data-label="PNG_SAVE"></button>
-        </div>
-        <div class="export-row">
-          <button type="button" class="btn chain-btn export-btn" id="focal-copy-btn" data-action="copy-result" data-label="COPY" disabled></button>
-          <button type="button" class="btn btn-gold export-btn" id="focal-export-btn" data-action="export-result" data-label="EXPORT" disabled></button>
-        </div>
-      </div>
-      <textarea class="copy-fallback" id="focal-copy-fallback" readonly hidden></textarea>
     </div>
   </section>
 
@@ -337,6 +302,7 @@
         <div class="calc-kicker" data-calc-kicker="dof"></div>
         <div class="calc-name" data-calc-name="dof"></div>
       </div>
+      <span class="date-badge calc-date" data-role="today-date"></span>
     </div>
     <div class="calc-body">
       <div class="field-grid">
@@ -358,7 +324,7 @@
           <label for="dof-k" data-field-label="dof:input:k"></label>
           <div class="field-input">
             <input class="input" id="dof-k" type="number" inputmode="decimal" step="any" value="2">
-            <span class="unit-label"></span>
+            <span class="unit-label" data-field-unit="dof:input:k"></span>
           </div>
         </div>
         <div class="field">
@@ -387,18 +353,6 @@
           <div class="result-value"><span id="dof-result-coc">—</span> <span class="result-unit">mm</span></div>
         </div>
       </div>
-      <div class="export-wrap">
-        <div class="export-menu" id="dof-export-menu" hidden>
-          <button type="button" class="btn chain-btn" data-action="export-share" data-label="SHARE" hidden></button>
-          <button type="button" class="btn chain-btn" data-action="export-csv" data-label="CSV_SAVE"></button>
-          <button type="button" class="btn chain-btn" data-action="export-png" data-label="PNG_SAVE"></button>
-        </div>
-        <div class="export-row">
-          <button type="button" class="btn chain-btn export-btn" id="dof-copy-btn" data-action="copy-result" data-label="COPY" disabled></button>
-          <button type="button" class="btn btn-gold export-btn" id="dof-export-btn" data-action="export-result" data-label="EXPORT" disabled></button>
-        </div>
-      </div>
-      <textarea class="copy-fallback" id="dof-copy-fallback" readonly hidden></textarea>
     </div>
   </section>
 
@@ -410,6 +364,7 @@
         <div class="calc-kicker" data-calc-kicker="linescan"></div>
         <div class="calc-name" data-calc-name="linescan"></div>
       </div>
+      <span class="date-badge calc-date" data-role="today-date"></span>
     </div>
     <div class="calc-body">
       <div class="field-grid">
@@ -443,23 +398,10 @@
           <div class="result-value"><span id="linescan-result-period">—</span> <span class="result-unit">㎲</span></div>
         </div>
       </div>
-      <div class="export-wrap">
-        <div class="export-menu" id="linescan-export-menu" hidden>
-          <button type="button" class="btn chain-btn" data-action="export-share" data-label="SHARE" hidden></button>
-          <button type="button" class="btn chain-btn" data-action="export-csv" data-label="CSV_SAVE"></button>
-          <button type="button" class="btn chain-btn" data-action="export-png" data-label="PNG_SAVE"></button>
-        </div>
-        <div class="export-row">
-          <button type="button" class="btn chain-btn export-btn" id="linescan-copy-btn" data-action="copy-result" data-label="COPY" disabled></button>
-          <button type="button" class="btn btn-gold export-btn" id="linescan-export-btn" data-action="export-result" data-label="EXPORT" disabled></button>
-        </div>
-      </div>
-      <textarea class="copy-fallback" id="linescan-copy-fallback" readonly hidden></textarea>
     </div>
   </section>
 
-  <div class="toast" id="toast"></div>
 </div>
-<script type="module" src="src/app.js?v=202607182201"></script>
+<script type="module" src="src/app.js?v=202607190815"></script>
 </body>
 </html>
