@@ -18,15 +18,20 @@ const LABELS = {
   CAMERA_MODEL: { ko: '카메라 모델', en: 'Camera model' },
   CAMERA_MANUAL: { ko: '직접 입력', en: 'Manual entry' },
   CAMERA_UNAVAILABLE: { ko: '카메라 목록 없음 — 직접 입력', en: 'No camera list — manual entry' },
-  CHAIN_EXPOSURE: { ko: '이 분해능으로 노출 →', en: 'Use resolution in exposure →' },
-  CHAIN_LINESCAN: { ko: 'Linerate 계산 →', en: 'Line Rate Calculation →' },
-  CHAIN_DOF: { ko: '이 배율로 DOF →', en: 'Use magnification in DOF →' },
   APP_TITLE: { ko: '머신비전 계산기', en: 'Machine Vision Calculators' },
   APP_SUB: { ko: '광학 · 타이밍 · 라인스캔', en: 'Optics · Timing · Line scan' },
   COMING_SOON: { ko: '+ 계산기 추가 예정', en: '+ More calculators coming' },
   FOOTER_SUB: { ko: '사내용 계산 도구', en: 'Internal engineering tool' },
   MODE_SPEED: { ko: '속도·분해능', en: 'Speed · Resolution' },
   MODE_FPS: { ko: 'Frame rate', en: 'Frame rate' },
+  MODE_FOV_LENS: { ko: '렌즈·WD', en: 'Lens · WD' },
+  MODE_FOV_RES: { ko: '분해능·픽셀수', en: 'Resolution · Pixel count' },
+  MODE_DOF_COC: { ko: 'CoC·배율', en: 'CoC · Magnification' },
+  MODE_DOF_WAVE: { ko: '파장·NA', en: 'Wavelength · NA' },
+  MODE_FOCAL_WD: { ko: 'WD 구하기', en: 'Find WD' },
+  MODE_FOCAL_FL: { ko: 'Focal Length 구하기', en: 'Find Focal Length' },
+  MODE_MAG_PIXELS: { ko: '픽셀사이즈·분해능', en: 'Pixel size · Resolution' },
+  MODE_MAG_FOV: { ko: '센서크기·FOV', en: 'Sensor size · FOV' },
   RESULTS_HEADER: { ko: '계산 결과', en: 'Results' },
 };
 
@@ -45,6 +50,7 @@ const CALC_DEFS = {
       { key: 'rw', label: { ko: '해상도 가로', en: 'Resolution H' }, unit: 'px' },
       { key: 'rh', label: { ko: '해상도 세로', en: 'Resolution V' }, unit: 'px' },
       { key: 'wd', label: { ko: 'WD', en: 'WD' }, unit: 'mm' },
+      { key: 'res', label: { ko: '분해능', en: 'Resolution' }, unit: '㎛/px' },
     ],
     results: [
       { key: 'major', label: { ko: 'FOV 장축', en: 'FOV major axis' }, unit: 'mm' },
@@ -53,9 +59,23 @@ const CALC_DEFS = {
       { key: 'm', label: { ko: '배율', en: 'Magnification' }, unit: '' },
     ],
   },
-  exposure: {
+  mag: {
     num: '04',
-    kicker: '04 · Timing',
+    kicker: '04 · Optics',
+    name: { ko: '배율 계산', en: 'Magnification Calculation' },
+    inputs: [
+      { key: 'pxs', label: { ko: '픽셀사이즈', en: 'Pixel size' }, unit: '㎛' },
+      { key: 'res', label: { ko: '분해능', en: 'Resolution' }, unit: '㎛/px' },
+      { key: 's', label: { ko: '센서 크기', en: 'Sensor size' }, unit: 'mm' },
+      { key: 'fov', label: { ko: 'FOV', en: 'FOV' }, unit: 'mm' },
+    ],
+    results: [
+      { key: 'm', label: { ko: '배율', en: 'Magnification' }, unit: '' },
+    ],
+  },
+  exposure: {
+    num: '05',
+    kicker: '05 · Timing',
     name: { ko: '최적 Exposure time 계산', en: 'Optimal Exposure Time' },
     note: {
       ko: '마진은 카메라의 FOT/오버헤드 시간입니다. 기종마다 다르니 사양서를 확인하세요.',
@@ -86,10 +106,12 @@ const CALC_DEFS = {
       { key: 'rw', label: { ko: '해상도 가로', en: 'Resolution H' }, unit: 'px' },
       { key: 'rh', label: { ko: '해상도 세로', en: 'Resolution V' }, unit: 'px' },
       { key: 'fov', label: { ko: '목표 FOV', en: 'Target FOV' }, unit: 'mm' },
+      { key: 'wd', label: { ko: 'WD', en: 'WD' }, unit: 'mm' },
     ],
     results: [
       { key: 'wd', label: { ko: 'WD', en: 'WD' }, unit: 'mm' },
       { key: 'm', label: { ko: '배율', en: 'Magnification' }, unit: '' },
+      { key: 'f', label: { ko: 'Focal Length', en: 'Focal Length' }, unit: 'mm' },
     ],
   },
   dof: {
@@ -99,18 +121,20 @@ const CALC_DEFS = {
     inputs: [
       { key: 'n', label: { ko: '조리개', en: 'Aperture' }, unit: 'F' },
       { key: 'pxs', label: { ko: '픽셀사이즈', en: 'Pixel size' }, unit: '㎛' },
-      { key: 'k', label: { ko: '계수', en: 'Coefficient' }, unit: 'px' },
+      { key: 'k', label: { ko: '허용 CoC', en: 'Allowable CoC' }, unit: 'px' },
       { key: 'm', label: { ko: '배율', en: 'Magnification' }, unit: { ko: '배', en: '×' } },
+      { key: 'lambda', label: { ko: '파장', en: 'Wavelength' }, unit: 'nm' },
+      { key: 'na', label: { ko: 'NA', en: 'NA' }, unit: '' },
     ],
     results: [
-      { key: 'half', label: { ko: '반값 DOF', en: 'Half DOF' }, unit: 'mm' },
-      { key: 'total', label: { ko: '총 DOF', en: 'Total DOF' }, unit: 'mm' },
+      { key: 'half', label: { ko: '± DOF', en: '± DOF' }, unit: '㎛' },
+      { key: 'total', label: { ko: '총 DOF', en: 'Total DOF' }, unit: '㎛' },
       { key: 'coc', label: { ko: 'CoC', en: 'CoC' }, unit: 'mm' },
     ],
   },
   linescan: {
-    num: '05',
-    kicker: '05 · Line scan',
+    num: '06',
+    kicker: '06 · Line scan',
     name: { ko: 'Linerate 계산', en: 'Line Rate Calculation' },
     note: {
       ko: '정사각 픽셀 가정: 스캔 방향 픽셀 크기는 라인레이트가 결정합니다(가로=세로 샘플링).',
@@ -128,12 +152,40 @@ const CALC_DEFS = {
 };
 
 let currentScreen = 'home';
-let lastFovResult = null;
 let backTarget = null;
 let cameras = [];
 let pendingCameraSelections = {};
-let expMode = 'speed';
 const CAMERA_SCREENS = ['fov', 'focal'];
+
+const MODE_OPTIONS = {
+  exposure: ['speed', 'fps'],
+  fov: ['lens', 'res'],
+  focal: ['wd', 'fl'],
+  dof: ['coc', 'wave'],
+  mag: ['pixels', 'fov'],
+};
+const modeState = {
+  exposure: 'speed',
+  fov: 'lens',
+  focal: 'wd',
+  dof: 'coc',
+  mag: 'pixels',
+};
+
+let lastResults = { fov: null, focal: null, dof: null, mag: null };
+
+const CHAINS = [
+  { from: 'fov', fromMode: 'lens', valueKey: 'r', to: 'exposure', toMode: 'speed', toField: 'r', label: { ko: '→ Exposure', en: '→ Exposure' } },
+  { from: 'fov', fromMode: 'lens', valueKey: 'r', to: 'linescan', toField: 'r', label: { ko: '→ Linerate', en: '→ Linerate' } },
+  { from: 'fov', fromMode: 'lens', valueKey: 'r', to: 'mag', toMode: 'pixels', toField: 'res', label: { ko: '→ 배율', en: '→ Magnification' } },
+  { from: 'fov', fromMode: 'lens', valueKey: 'm', to: 'dof', toMode: 'coc', toField: 'm', label: { ko: '→ 심도', en: '→ DOF' } },
+  { from: 'fov', valueKey: 'major', to: 'focal', toField: 'fov', label: { ko: '→ WD', en: '→ WD' } },
+  { from: 'fov', valueKey: 'major', to: 'mag', toMode: 'fov', toField: 'fov', label: { ko: '→ 배율', en: '→ Magnification' } },
+  { from: 'focal', fromMode: 'wd', valueKey: 'm', to: 'dof', toMode: 'coc', toField: 'm', label: { ko: '→ 심도', en: '→ DOF' } },
+  { from: 'focal', fromMode: 'fl', valueKey: 'f', to: 'fov', toMode: 'lens', toField: 'f', label: { ko: '→ FOV', en: '→ FOV' } },
+  { from: 'focal', fromMode: 'fl', valueKey: 'm', to: 'dof', toMode: 'coc', toField: 'm', label: { ko: '→ 심도', en: '→ DOF' } },
+  { from: 'mag', valueKey: 'm', to: 'dof', toMode: 'coc', toField: 'm', label: { ko: '→ 심도', en: '→ DOF' } },
+];
 
 function errorText(code) {
   return (ERROR_MESSAGES[code] || ERROR_MESSAGES.NOT_POSITIVE)[LANG];
@@ -178,10 +230,12 @@ function applyStaticLabels() {
     el.classList.toggle('active', el.dataset.lang === LANG);
   });
   document.querySelectorAll('[data-action="set-mode"]').forEach((el) => {
-    el.classList.toggle('active', el.dataset.mode === expMode);
+    const calcId = el.closest('.screen[data-calc]')?.dataset.calc;
+    el.classList.toggle('active', calcId != null && el.dataset.mode === modeState[calcId]);
   });
   document.querySelectorAll('[data-mode-group]').forEach((el) => {
-    el.hidden = el.dataset.modeGroup !== expMode;
+    const calcId = el.closest('.screen[data-calc]')?.dataset.calc;
+    el.hidden = calcId == null || el.dataset.modeGroup !== modeState[calcId];
   });
 }
 
@@ -196,12 +250,13 @@ function updateDateBadges() {
   });
 }
 
-function setExpMode(mode) {
-  if (mode !== 'speed' && mode !== 'fps') return;
-  if (mode === expMode) return;
-  expMode = mode;
+function setMode(calcId, mode) {
+  const options = MODE_OPTIONS[calcId];
+  if (!options || !options.includes(mode)) return;
+  if (modeState[calcId] === mode) return;
+  modeState[calcId] = mode;
   applyStaticLabels();
-  runCompute('exposure');
+  runCompute(calcId);
   persist();
 }
 
@@ -268,14 +323,44 @@ function showError(calcId, code) {
   }
 }
 
-function setChainEnabled(enabled) {
-  ['fov-chain-exposure', 'fov-chain-linescan', 'fov-chain-dof'].forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) el.disabled = !enabled;
+function chainsFor(calcId) {
+  const mode = modeState[calcId];
+  return CHAINS.filter((c) => c.from === calcId && (c.fromMode === undefined || c.fromMode === mode));
+}
+
+function renderChainButtons(calcId) {
+  const container = document.querySelector(`#screen-${calcId} [data-chain-container]`);
+  if (!container) return;
+  container.innerHTML = '';
+  const results = lastResults[calcId];
+  chainsFor(calcId).forEach((chain) => {
+    const value = results ? results[chain.valueKey] : undefined;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn chain-btn';
+    btn.textContent = chain.label[LANG];
+    btn.disabled = typeof value !== 'number' || !Number.isFinite(value);
+    btn.addEventListener('click', () => runChain(chain));
+    container.appendChild(btn);
   });
 }
 
+function runChain(chain) {
+  const results = lastResults[chain.from];
+  const value = results ? results[chain.valueKey] : undefined;
+  if (typeof value !== 'number' || !Number.isFinite(value)) return;
+  if (chain.toMode) setMode(chain.to, chain.toMode);
+  setNum(chain.to, chain.toField, roundForInput(value));
+  backTarget = currentScreen;
+  showScreen(chain.to);
+}
+
 function computeFov() {
+  if (modeState.fov === 'res') return computeFovRes();
+  return computeFovLens();
+}
+
+function computeFovLens() {
   const pxs = getNum('fov', 'pxs');
   const f = getNum('fov', 'f');
   const rw = getNum('fov', 'rw');
@@ -288,8 +373,7 @@ function computeFov() {
     setResult('fov-result-r', '—');
     setResult('fov-result-m', '—');
     showError('fov', code);
-    lastFovResult = null;
-    setChainEnabled(false);
+    lastResults.fov = null;
   };
 
   const sensor = formulas.sensorSize({ pxSizeUm: pxs, pxCountH: rw, pxCountV: rh });
@@ -312,8 +396,34 @@ function computeFov() {
   setResult('fov-result-minor', fmt(minor, 1));
   setResult('fov-result-r', fmt(res.values.resolutionUm, 2));
   setResult('fov-result-m', fmt(fovW.values.M, 3));
-  lastFovResult = { r: res.values.resolutionUm, m: fovW.values.M };
-  setChainEnabled(true);
+  lastResults.fov = { r: res.values.resolutionUm, m: fovW.values.M, major, minor };
+}
+
+function computeFovRes() {
+  const resolutionUm = getNum('fov', 'res');
+  const rw = getNum('fov', 'rw');
+  const rh = getNum('fov', 'rh');
+
+  const fail = (code) => {
+    setResult('fov-result-major', '—');
+    setResult('fov-result-minor', '—');
+    showError('fov', code);
+    lastResults.fov = null;
+  };
+
+  const fovW = formulas.fovFromResolution({ resolutionUm, pxCount: rw });
+  if (!fovW.ok) return fail(fovW.error);
+
+  const fovH = formulas.fovFromResolution({ resolutionUm, pxCount: rh });
+  if (!fovH.ok) return fail(fovH.error);
+
+  const major = Math.max(fovW.values.fovMm, fovH.values.fovMm);
+  const minor = Math.min(fovW.values.fovMm, fovH.values.fovMm);
+
+  showError('fov', null);
+  setResult('fov-result-major', fmt(major, 1));
+  setResult('fov-result-minor', fmt(minor, 1));
+  lastResults.fov = { major, minor };
 }
 
 function populateCameraSelect(calcId) {
@@ -386,7 +496,7 @@ function computeExposure() {
     showError('exposure', code);
   };
 
-  const out = expMode === 'speed'
+  const out = modeState.exposure === 'speed'
     ? formulas.exposureFromSpeed({ resolutionUm: getNum('exposure', 'r'), speedMmS: getNum('exposure', 'speed'), marginUs: margin })
     : formulas.exposureFromFps({ fps: getNum('exposure', 'fps'), marginUs: margin });
   if (!out.ok) return fail(out.error);
@@ -397,6 +507,11 @@ function computeExposure() {
 }
 
 function computeFocal() {
+  if (modeState.focal === 'fl') return computeFocalFl();
+  return computeFocalWd();
+}
+
+function computeFocalWd() {
   const pxs = getNum('focal', 'pxs');
   const f = getNum('focal', 'f');
   const rw = getNum('focal', 'rw');
@@ -407,6 +522,7 @@ function computeFocal() {
     setResult('focal-result-wd', '—');
     setResult('focal-result-m', '—');
     showError('focal', code);
+    lastResults.focal = null;
   };
 
   const sensor = formulas.sensorSize({ pxSizeUm: pxs, pxCountH: rw, pxCountV: rh });
@@ -421,15 +537,41 @@ function computeFocal() {
   showError('focal', null);
   setResult('focal-result-wd', fmt(wd.values.wdMm, 1));
   setResult('focal-result-m', fmt(mag.values.M, 3));
+  lastResults.focal = { wd: wd.values.wdMm, m: mag.values.M };
+}
+
+function computeFocalFl() {
+  const pxs = getNum('focal', 'pxs');
+  const rw = getNum('focal', 'rw');
+  const rh = getNum('focal', 'rh');
+  const wd = getNum('focal', 'wd');
+  const fovMm = getNum('focal', 'fov');
+
+  const fail = (code) => {
+    setResult('focal-result-f', '—');
+    setResult('focal-result-m', '—');
+    showError('focal', code);
+    lastResults.focal = null;
+  };
+
+  const sensor = formulas.sensorSize({ pxSizeUm: pxs, pxCountH: rw, pxCountV: rh });
+  if (!sensor.ok) return fail(sensor.error);
+
+  const focal = formulas.focalFromFov({ sensorMm: sensor.values.widthMm, fovMm, wd });
+  if (!focal.ok) return fail(focal.error);
+
+  showError('focal', null);
+  setResult('focal-result-f', fmt(focal.values.f, 1));
+  setResult('focal-result-m', fmt(focal.values.M, 3));
+  lastResults.focal = { f: focal.values.f, m: focal.values.M };
 }
 
 function computeDof() {
-  const N = getNum('dof', 'n');
-  const pxs = getNum('dof', 'pxs');
-  const k = getNum('dof', 'k');
-  const M = getNum('dof', 'm');
+  const mode = modeState.dof;
+  const out = mode === 'wave'
+    ? formulas.dofDiffraction({ lambdaNm: getNum('dof', 'lambda'), NA: getNum('dof', 'na') })
+    : formulas.dof({ N: getNum('dof', 'n'), pxSizeUm: getNum('dof', 'pxs'), k: getNum('dof', 'k'), M: getNum('dof', 'm') });
 
-  const out = formulas.dof({ N, pxSizeUm: pxs, k, M });
   if (!out.ok) {
     setResult('dof-result-half', '—');
     setResult('dof-result-total', '—');
@@ -438,9 +580,11 @@ function computeDof() {
     return;
   }
   showError('dof', null);
-  setResult('dof-result-half', '± ' + fmt(out.values.halfMm, 2));
-  setResult('dof-result-total', fmt(out.values.totalMm, 2));
-  setResult('dof-result-coc', fmt(out.values.cocMm, 4));
+  setResult('dof-result-half', fmt(out.values.halfMm * 1000, 1));
+  setResult('dof-result-total', fmt(out.values.totalMm * 1000, 1));
+  if (mode === 'coc') {
+    setResult('dof-result-coc', fmt(out.values.cocMm, 4));
+  }
 }
 
 function computeLinescan() {
@@ -459,17 +603,37 @@ function computeLinescan() {
   setResult('linescan-result-period', fmt(out.values.linePeriodUs, 2));
 }
 
+function computeMag() {
+  const mode = modeState.mag;
+  const fail = (code) => {
+    setResult('mag-result-m', '—');
+    showError('mag', code);
+    lastResults.mag = null;
+  };
+
+  const out = mode === 'fov'
+    ? formulas.magFromFov({ sensorMm: getNum('mag', 's'), fovMm: getNum('mag', 'fov') })
+    : formulas.magFromPixels({ pxSizeUm: getNum('mag', 'pxs'), resolutionUm: getNum('mag', 'res') });
+  if (!out.ok) return fail(out.error);
+
+  showError('mag', null);
+  setResult('mag-result-m', fmt(out.values.M, 4));
+  lastResults.mag = { m: out.values.M };
+}
+
 const COMPUTE_FNS = {
   fov: computeFov,
   exposure: computeExposure,
   focal: computeFocal,
   dof: computeDof,
   linescan: computeLinescan,
+  mag: computeMag,
 };
 
 function runCompute(calcId) {
   const fn = COMPUTE_FNS[calcId];
   if (fn) fn();
+  renderChainButtons(calcId);
 }
 
 function computeAll() {
@@ -492,7 +656,7 @@ function persist() {
     inputs[el.id] = el.value;
   });
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ screen: currentScreen, lang: LANG, expMode, inputs }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ screen: currentScreen, lang: LANG, modeState, inputs }));
   } catch (e) {}
 }
 
@@ -502,7 +666,12 @@ function restore() {
     saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
   } catch (e) {}
   if (saved && (saved.lang === 'ko' || saved.lang === 'en')) LANG = saved.lang;
-  if (saved && (saved.expMode === 'speed' || saved.expMode === 'fps')) expMode = saved.expMode;
+  if (saved && saved.modeState) {
+    Object.keys(MODE_OPTIONS).forEach((calcId) => {
+      const m = saved.modeState[calcId];
+      if (m && MODE_OPTIONS[calcId].includes(m)) modeState[calcId] = m;
+    });
+  }
   if (saved && saved.inputs) {
     for (const [id, value] of Object.entries(saved.inputs)) {
       const cameraMatch = CAMERA_SCREENS.find((calcId) => id === `${calcId}-camera`);
@@ -519,18 +688,6 @@ function restore() {
 
 function roundForInput(value) {
   return String(Math.round(value * 10000) / 10000);
-}
-
-function chainFromFov(target) {
-  if (!lastFovResult) return;
-  if (target === 'exposure') {
-    setExpMode('speed');
-    setNum('exposure', 'r', roundForInput(lastFovResult.r));
-  }
-  if (target === 'linescan') setNum('linescan', 'r', roundForInput(lastFovResult.r));
-  if (target === 'dof') setNum('dof', 'm', roundForInput(lastFovResult.m));
-  backTarget = currentScreen;
-  showScreen(target);
 }
 
 document.addEventListener('input', (e) => {
@@ -565,9 +722,11 @@ document.addEventListener('click', (e) => {
     const target = backTarget;
     backTarget = null;
     showScreen(target || 'home');
-  } else if (action === 'chain') chainFromFov(btn.dataset.chain);
-  else if (action === 'set-lang') setLang(btn.dataset.lang);
-  else if (action === 'set-mode') setExpMode(btn.dataset.mode);
+  } else if (action === 'set-lang') setLang(btn.dataset.lang);
+  else if (action === 'set-mode') {
+    const calcId = btn.closest('.screen[data-calc]')?.dataset.calc;
+    if (calcId) setMode(calcId, btn.dataset.mode);
+  }
 });
 
 const initialScreen = restore();

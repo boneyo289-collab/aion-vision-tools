@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AION Vision Tools — 머신비전 계산기</title>
-<link rel="stylesheet" href="assets/styles.css?v=202607191427">
+<link rel="stylesheet" href="assets/styles.css?v=202607191728">
 </head>
 <body>
 <div class="app">
@@ -47,15 +47,22 @@
         </span>
         <span class="calc-card-arrow">→</span>
       </button>
+      <button type="button" class="calc-card" data-action="open" data-target="mag">
+        <span class="calc-card-circle tint-a">04</span>
+        <span class="calc-card-text">
+          <span class="calc-card-name" data-calc-name="mag"></span>
+        </span>
+        <span class="calc-card-arrow">→</span>
+      </button>
       <button type="button" class="calc-card" data-action="open" data-target="exposure">
-        <span class="calc-card-circle tint-b">04</span>
+        <span class="calc-card-circle tint-b">05</span>
         <span class="calc-card-text">
           <span class="calc-card-name" data-calc-name="exposure"></span>
         </span>
         <span class="calc-card-arrow">→</span>
       </button>
       <button type="button" class="calc-card" data-action="open" data-target="linescan">
-        <span class="calc-card-circle tint-b">05</span>
+        <span class="calc-card-circle tint-b">06</span>
         <span class="calc-card-text">
           <span class="calc-card-name" data-calc-name="linescan"></span>
         </span>
@@ -77,6 +84,10 @@
       <span class="date-badge calc-date" data-role="today-date"></span>
     </div>
     <div class="calc-body">
+      <div class="mode-seg">
+        <button type="button" class="mode-seg-btn" data-action="set-mode" data-mode="lens" data-label="MODE_FOV_LENS"></button>
+        <button type="button" class="mode-seg-btn" data-action="set-mode" data-mode="res" data-label="MODE_FOV_RES"></button>
+      </div>
       <div class="field">
         <label for="fov-camera" data-label="CAMERA_MODEL"></label>
         <div class="field-input">
@@ -85,7 +96,7 @@
           </select>
         </div>
       </div>
-      <div class="field-grid">
+      <div class="field-grid" data-mode-group="lens">
         <div class="field">
           <label for="fov-pxs" data-field-label="fov:input:pxs"></label>
           <div class="field-input">
@@ -100,6 +111,8 @@
             <span class="unit-label">mm</span>
           </div>
         </div>
+      </div>
+      <div class="field-grid">
         <div class="field">
           <label for="fov-rw" data-field-label="fov:input:rw"></label>
           <div class="field-input">
@@ -114,11 +127,22 @@
             <span class="unit-label">px</span>
           </div>
         </div>
+      </div>
+      <div class="field-grid" data-mode-group="lens">
         <div class="field span-2">
           <label for="fov-wd" data-field-label="fov:input:wd"></label>
           <div class="field-input">
             <input class="input" id="fov-wd" type="number" inputmode="decimal" step="any" value="300">
             <span class="unit-label">mm</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-grid" data-mode-group="res">
+        <div class="field span-2">
+          <label for="fov-res" data-field-label="fov:input:res"></label>
+          <div class="field-input">
+            <input class="input" id="fov-res" type="number" inputmode="decimal" step="any" value="65">
+            <span class="unit-label">㎛/px</span>
           </div>
         </div>
       </div>
@@ -136,24 +160,20 @@
           <div class="result-label" data-field-label="fov:result:minor"></div>
           <div class="result-value"><span id="fov-result-minor">—</span> <span class="result-unit">mm</span></div>
         </div>
-        <div>
+        <div data-mode-group="lens">
           <div class="result-label" data-field-label="fov:result:r"></div>
           <div class="result-value"><span id="fov-result-r">—</span> <span class="result-unit">㎛/px</span></div>
         </div>
-        <div>
+        <div data-mode-group="lens">
           <div class="result-label" data-field-label="fov:result:m"></div>
           <div class="result-value"><span id="fov-result-m">—</span></div>
         </div>
       </div>
-      <div class="chain-buttons">
-        <button type="button" class="btn chain-btn" id="fov-chain-exposure" data-action="chain" data-chain="exposure" data-label="CHAIN_EXPOSURE" disabled></button>
-        <button type="button" class="btn chain-btn" id="fov-chain-linescan" data-action="chain" data-chain="linescan" data-label="CHAIN_LINESCAN" disabled></button>
-        <button type="button" class="btn chain-btn" id="fov-chain-dof" data-action="chain" data-chain="dof" data-label="CHAIN_DOF" disabled></button>
-      </div>
+      <div class="chain-buttons" data-chain-container></div>
     </div>
   </section>
 
-  <!-- ═══ 04 최적 Exposure time 계산 ═══ -->
+  <!-- ═══ 05 최적 Exposure time 계산 ═══ -->
   <section id="screen-exposure" class="screen" data-calc="exposure">
     <div class="calc-header">
       <button type="button" class="btn btn-icon btn-secondary" data-action="home">←</button>
@@ -231,6 +251,10 @@
       <span class="date-badge calc-date" data-role="today-date"></span>
     </div>
     <div class="calc-body">
+      <div class="mode-seg">
+        <button type="button" class="mode-seg-btn" data-action="set-mode" data-mode="wd" data-label="MODE_FOCAL_WD"></button>
+        <button type="button" class="mode-seg-btn" data-action="set-mode" data-mode="fl" data-label="MODE_FOCAL_FL"></button>
+      </div>
       <div class="field">
         <label for="focal-camera" data-label="CAMERA_MODEL"></label>
         <div class="field-input">
@@ -248,13 +272,6 @@
           </div>
         </div>
         <div class="field">
-          <label for="focal-f" data-field-label="focal:input:f"></label>
-          <div class="field-input">
-            <input class="input" id="focal-f" type="number" inputmode="decimal" step="any" value="16">
-            <span class="unit-label">mm</span>
-          </div>
-        </div>
-        <div class="field">
           <label for="focal-rw" data-field-label="focal:input:rw"></label>
           <div class="field-input">
             <input class="input" id="focal-rw" type="number" inputmode="decimal" step="any" value="2448">
@@ -268,6 +285,26 @@
             <span class="unit-label">px</span>
           </div>
         </div>
+      </div>
+      <div class="field-grid" data-mode-group="wd">
+        <div class="field span-2">
+          <label for="focal-f" data-field-label="focal:input:f"></label>
+          <div class="field-input">
+            <input class="input" id="focal-f" type="number" inputmode="decimal" step="any" value="16">
+            <span class="unit-label">mm</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-grid" data-mode-group="fl">
+        <div class="field span-2">
+          <label for="focal-wd" data-field-label="focal:input:wd"></label>
+          <div class="field-input">
+            <input class="input" id="focal-wd" type="number" inputmode="decimal" step="any" value="300">
+            <span class="unit-label">mm</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-grid">
         <div class="field span-2">
           <label for="focal-fov" data-field-label="focal:input:fov"></label>
           <div class="field-input">
@@ -282,15 +319,20 @@
       <div class="result-kicker" data-label="RESULTS_HEADER"></div>
       <p class="result-error" id="focal-error"></p>
       <div class="result-grid">
-        <div>
+        <div data-mode-group="wd">
           <div class="result-label" data-field-label="focal:result:wd"></div>
           <div class="result-value"><span id="focal-result-wd">—</span> <span class="result-unit">mm</span></div>
+        </div>
+        <div data-mode-group="fl">
+          <div class="result-label" data-field-label="focal:result:f"></div>
+          <div class="result-value"><span id="focal-result-f">—</span> <span class="result-unit">mm</span></div>
         </div>
         <div>
           <div class="result-label" data-field-label="focal:result:m"></div>
           <div class="result-value"><span id="focal-result-m">—</span></div>
         </div>
       </div>
+      <div class="chain-buttons" data-chain-container></div>
     </div>
   </section>
 
@@ -305,7 +347,11 @@
       <span class="date-badge calc-date" data-role="today-date"></span>
     </div>
     <div class="calc-body">
-      <div class="field-grid">
+      <div class="mode-seg">
+        <button type="button" class="mode-seg-btn" data-action="set-mode" data-mode="coc" data-label="MODE_DOF_COC"></button>
+        <button type="button" class="mode-seg-btn" data-action="set-mode" data-mode="wave" data-label="MODE_DOF_WAVE"></button>
+      </div>
+      <div class="field-grid" data-mode-group="coc">
         <div class="field">
           <label for="dof-n" data-field-label="dof:input:n"></label>
           <div class="field-input">
@@ -335,6 +381,22 @@
           </div>
         </div>
       </div>
+      <div class="field-grid" data-mode-group="wave">
+        <div class="field">
+          <label for="dof-lambda" data-field-label="dof:input:lambda"></label>
+          <div class="field-input">
+            <input class="input" id="dof-lambda" type="number" inputmode="decimal" step="any" value="550">
+            <span class="unit-label">nm</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="dof-na" data-field-label="dof:input:na"></label>
+          <div class="field-input">
+            <input class="input" id="dof-na" type="number" inputmode="decimal" step="any" value="0.1">
+            <span class="unit-label" data-field-unit="dof:input:na"></span>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="result-panel">
       <div class="result-kicker" data-label="RESULTS_HEADER"></div>
@@ -342,13 +404,13 @@
       <div class="result-grid">
         <div>
           <div class="result-label" data-field-label="dof:result:half"></div>
-          <div class="result-value"><span id="dof-result-half">—</span> <span class="result-unit">mm</span></div>
+          <div class="result-value"><span id="dof-result-half">—</span> <span class="result-unit">㎛</span></div>
         </div>
         <div>
           <div class="result-label" data-field-label="dof:result:total"></div>
-          <div class="result-value"><span id="dof-result-total">—</span> <span class="result-unit">mm</span></div>
+          <div class="result-value"><span id="dof-result-total">—</span> <span class="result-unit">㎛</span></div>
         </div>
-        <div>
+        <div data-mode-group="coc">
           <div class="result-label" data-field-label="dof:result:coc"></div>
           <div class="result-value"><span id="dof-result-coc">—</span> <span class="result-unit">mm</span></div>
         </div>
@@ -356,7 +418,68 @@
     </div>
   </section>
 
-  <!-- ═══ 05 Linerate 계산 ═══ -->
+  <!-- ═══ 04 배율 계산 ═══ -->
+  <section id="screen-mag" class="screen" data-calc="mag">
+    <div class="calc-header">
+      <button type="button" class="btn btn-icon btn-secondary" data-action="home">←</button>
+      <div class="calc-title">
+        <div class="calc-kicker" data-calc-kicker="mag"></div>
+        <div class="calc-name" data-calc-name="mag"></div>
+      </div>
+      <span class="date-badge calc-date" data-role="today-date"></span>
+    </div>
+    <div class="calc-body">
+      <div class="mode-seg">
+        <button type="button" class="mode-seg-btn" data-action="set-mode" data-mode="pixels" data-label="MODE_MAG_PIXELS"></button>
+        <button type="button" class="mode-seg-btn" data-action="set-mode" data-mode="fov" data-label="MODE_MAG_FOV"></button>
+      </div>
+      <div class="field-grid" data-mode-group="pixels">
+        <div class="field">
+          <label for="mag-pxs" data-field-label="mag:input:pxs"></label>
+          <div class="field-input">
+            <input class="input" id="mag-pxs" type="number" inputmode="decimal" step="any" value="3.45">
+            <span class="unit-label">㎛</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="mag-res" data-field-label="mag:input:res"></label>
+          <div class="field-input">
+            <input class="input" id="mag-res" type="number" inputmode="decimal" step="any" value="61.24">
+            <span class="unit-label">㎛/px</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-grid" data-mode-group="fov">
+        <div class="field">
+          <label for="mag-s" data-field-label="mag:input:s"></label>
+          <div class="field-input">
+            <input class="input" id="mag-s" type="number" inputmode="decimal" step="any" value="8.45">
+            <span class="unit-label">mm</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="mag-fov" data-field-label="mag:input:fov"></label>
+          <div class="field-input">
+            <input class="input" id="mag-fov" type="number" inputmode="decimal" step="any" value="150">
+            <span class="unit-label">mm</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="result-panel">
+      <div class="result-kicker" data-label="RESULTS_HEADER"></div>
+      <p class="result-error" id="mag-error"></p>
+      <div class="result-grid">
+        <div>
+          <div class="result-label" data-field-label="mag:result:m"></div>
+          <div class="result-value"><span id="mag-result-m">—</span></div>
+        </div>
+      </div>
+      <div class="chain-buttons" data-chain-container></div>
+    </div>
+  </section>
+
+  <!-- ═══ 06 Linerate 계산 ═══ -->
   <section id="screen-linescan" class="screen" data-calc="linescan">
     <div class="calc-header">
       <button type="button" class="btn btn-icon btn-secondary" data-action="home">←</button>
@@ -402,6 +525,6 @@
   </section>
 
 </div>
-<script type="module" src="src/app.js?v=202607191427"></script>
+<script type="module" src="src/app.js?v=202607191728"></script>
 </body>
 </html>

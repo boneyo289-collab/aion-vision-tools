@@ -138,6 +138,27 @@ export function lineScan({ speedMmS, resolutionUm }) {
   return { ok: true, values };
 }
 
+export function fovFromResolution({ resolutionUm, pxCount }) {
+  const err = checkPositive({ resolutionUm, pxCount });
+  if (err) return err;
+
+  const fovMm = (resolutionUm * pxCount) / 1000;
+  const values = { fovMm };
+  if (hasNonFinite(values)) return { ok: false, error: 'NOT_POSITIVE' };
+  return { ok: true, values };
+}
+
+export function dofDiffraction({ lambdaNm, NA }) {
+  const err = checkPositive({ lambdaNm, NA });
+  if (err) return err;
+
+  const totalMm = (lambdaNm / 1e6) / (NA * NA);
+  const halfMm = totalMm / 2;
+  const values = { totalMm, halfMm };
+  if (hasNonFinite(values)) return { ok: false, error: 'NOT_POSITIVE' };
+  return { ok: true, values };
+}
+
 export function dof({ N, pxSizeUm, k, M }) {
   const kValue = k === undefined || k === null ? 2 : k;
   const err = checkPositive({ N, pxSizeUm, k: kValue });
