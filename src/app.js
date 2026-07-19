@@ -177,12 +177,10 @@ let lastResults = { fov: null, focal: null, dof: null, mag: null };
 const CHAINS = [
   { from: 'fov', fromMode: 'lens', valueKey: 'r', to: 'exposure', toMode: 'speed', toField: 'r', label: { ko: '→ Exposure', en: '→ Exposure' } },
   { from: 'fov', fromMode: 'lens', valueKey: 'r', to: 'linescan', toField: 'r', label: { ko: '→ Linerate', en: '→ Linerate' } },
-  { from: 'fov', fromMode: 'lens', valueKey: 'r', to: 'mag', toMode: 'pixels', toField: 'res', label: { ko: '→ 배율', en: '→ Magnification' } },
   { from: 'fov', fromMode: 'lens', valueKey: 'm', to: 'dof', toMode: 'coc', toField: 'm', label: { ko: '→ 심도', en: '→ DOF' } },
-  { from: 'fov', valueKey: 'major', to: 'focal', toField: 'fov', label: { ko: '→ WD', en: '→ WD' } },
-  { from: 'fov', valueKey: 'major', to: 'mag', toMode: 'fov', toField: 'fov', label: { ko: '→ 배율', en: '→ Magnification' } },
+  { from: 'fov', fromMode: 'res', valueKey: 'major', to: 'focal', toField: 'fov', label: { ko: '→ WD', en: '→ WD' } },
+  { from: 'fov', fromMode: 'res', valueKey: 'major', to: 'mag', toMode: 'fov', toField: 'fov', label: { ko: '→ 배율', en: '→ Magnification' } },
   { from: 'focal', fromMode: 'wd', valueKey: 'm', to: 'dof', toMode: 'coc', toField: 'm', label: { ko: '→ 심도', en: '→ DOF' } },
-  { from: 'focal', fromMode: 'fl', valueKey: 'f', to: 'fov', toMode: 'lens', toField: 'f', label: { ko: '→ FOV', en: '→ FOV' } },
   { from: 'focal', fromMode: 'fl', valueKey: 'm', to: 'dof', toMode: 'coc', toField: 'm', label: { ko: '→ 심도', en: '→ DOF' } },
   { from: 'mag', valueKey: 'm', to: 'dof', toMode: 'coc', toField: 'm', label: { ko: '→ 심도', en: '→ DOF' } },
 ];
