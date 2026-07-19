@@ -19,7 +19,7 @@ const LABELS = {
   CAMERA_MANUAL: { ko: '직접 입력', en: 'Manual entry' },
   CAMERA_UNAVAILABLE: { ko: '카메라 목록 없음 — 직접 입력', en: 'No camera list — manual entry' },
   CHAIN_EXPOSURE: { ko: '이 분해능으로 노출 →', en: 'Use resolution in exposure →' },
-  CHAIN_LINESCAN: { ko: '라인스캔 →', en: 'Line scan →' },
+  CHAIN_LINESCAN: { ko: 'Linerate 계산 →', en: 'Line Rate Calculation →' },
   CHAIN_DOF: { ko: '이 배율로 DOF →', en: 'Use magnification in DOF →' },
   APP_TITLE: { ko: '머신비전 계산기', en: 'Machine Vision Calculators' },
   APP_SUB: { ko: '광학 · 타이밍 · 라인스캔', en: 'Optics · Timing · Line scan' },
@@ -34,7 +34,7 @@ const CALC_DEFS = {
   fov: {
     num: '01',
     kicker: '01 · Optics',
-    name: { ko: 'FOV · WD', en: 'FOV · WD' },
+    name: { ko: 'FOV 계산', en: 'FOV Calculation' },
     note: {
       ko: 'WD는 렌즈 주점 기준입니다. 실제 렌즈 카탈로그의 WD(렌즈 앞면 기준)와는 차이가 있으니 최종 선정은 렌즈 사양서를 확인하세요.',
       en: 'WD is measured from the lens principal point. This differs from the WD in lens catalogs (measured from the front of the lens) — confirm the final choice against the lens datasheet.',
@@ -54,9 +54,9 @@ const CALC_DEFS = {
     ],
   },
   exposure: {
-    num: '02',
-    kicker: '02 · Timing',
-    name: { ko: '최적 노출 시간', en: 'Optimal exposure time' },
+    num: '04',
+    kicker: '04 · Timing',
+    name: { ko: '최적 Exposure time 계산', en: 'Optimal Exposure Time' },
     note: {
       ko: '마진은 카메라의 FOT/오버헤드 시간입니다. 기종마다 다르니 사양서를 확인하세요.',
       en: 'Margin is the camera FOT/overhead time. This varies by model — check the datasheet.',
@@ -73,9 +73,9 @@ const CALC_DEFS = {
     ],
   },
   focal: {
-    num: '03',
-    kicker: '03 · Optics',
-    name: { ko: 'WD 계산', en: 'WD calculation' },
+    num: '02',
+    kicker: '02 · Optics',
+    name: { ko: 'WD 계산', en: 'WD Calculation' },
     note: {
       ko: '목표 FOV는 가로 기준입니다. WD는 렌즈 주점 기준입니다.',
       en: 'Target FOV is measured horizontally. WD is measured from the lens principal point.',
@@ -93,9 +93,9 @@ const CALC_DEFS = {
     ],
   },
   dof: {
-    num: '04',
-    kicker: '04 · Optics',
-    name: { ko: '피사계 심도 DOF', en: 'Depth of field DOF' },
+    num: '03',
+    kicker: '03 · Optics',
+    name: { ko: '심도 (DOF) 계산', en: 'DOF Calculation' },
     inputs: [
       { key: 'n', label: { ko: '조리개', en: 'Aperture' }, unit: 'F' },
       { key: 'pxs', label: { ko: '픽셀사이즈', en: 'Pixel size' }, unit: '㎛' },
@@ -111,7 +111,7 @@ const CALC_DEFS = {
   linescan: {
     num: '05',
     kicker: '05 · Line scan',
-    name: { ko: '라인스캔', en: 'Line scan' },
+    name: { ko: 'Linerate 계산', en: 'Line Rate Calculation' },
     note: {
       ko: '정사각 픽셀 가정: 스캔 방향 픽셀 크기는 라인레이트가 결정합니다(가로=세로 샘플링).',
       en: 'Assumes square pixels: the line rate determines the scan-direction pixel size (H = V sampling).',
