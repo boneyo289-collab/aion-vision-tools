@@ -4,7 +4,7 @@ import { ACCESS_SHA256 } from './access-config.js';
 
 const STORAGE_KEY = 'aion-vision-ui';
 const ACCESS_STORAGE_KEY = 'aion.access';
-const ACCESS_TTL_MS = 3 * 24 * 60 * 60 * 1000;
+const ACCESS_TTL_MS = 1 * 60 * 60 * 1000;
 let LANG = 'ko';
 
 const ERROR_MESSAGES = {
