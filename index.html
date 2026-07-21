@@ -4,9 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AION Vision Tools — 머신비전 계산기</title>
-<link rel="stylesheet" href="assets/styles.css?v=202607192110">
+<link rel="stylesheet" href="assets/styles.css?v=202607211509">
 </head>
 <body>
+<div id="access-gate" class="access-gate" hidden>
+  <div class="access-card">
+    <img src="assets/aion-logo.png" alt="AION" class="access-logo">
+    <h2 class="access-title" data-label="ACCESS_TITLE"></h2>
+    <div class="field-input">
+      <input type="password" id="access-password" class="input" data-label-placeholder="ACCESS_PLACEHOLDER">
+    </div>
+    <p class="access-error" id="access-error" data-label="ACCESS_ERROR"></p>
+    <button type="button" class="btn btn-primary access-submit" data-action="access-submit" data-label="ACCESS_SUBMIT"></button>
+  </div>
+</div>
 <div class="app">
 
   <!-- ═══ HOME ═══ -->
@@ -525,6 +536,6 @@
   </section>
 
 </div>
-<script type="module" src="src/app.js?v=202607192110"></script>
+<script type="module" src="src/app.js?v=202607211509"></script>
 </body>
 </html>

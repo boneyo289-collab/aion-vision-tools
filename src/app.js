@@ -1,7 +1,10 @@
 import * as formulas from './formulas.js';
 import { parseCamerasCsv } from './cameras.js';
+import { ACCESS_SHA256 } from './access-config.js';
 
 const STORAGE_KEY = 'aion-vision-ui';
+const ACCESS_STORAGE_KEY = 'aion.access';
+const ACCESS_TTL_MS = 3 * 24 * 60 * 60 * 1000;
 let LANG = 'ko';
 
 const ERROR_MESSAGES = {
@@ -33,6 +36,10 @@ const LABELS = {
   MODE_MAG_PIXELS: { ko: '픽셀사이즈·분해능', en: 'Pixel size · Resolution' },
   MODE_MAG_FOV: { ko: '센서크기·FOV', en: 'Sensor size · FOV' },
   RESULTS_HEADER: { ko: '계산 결과', en: 'Results' },
+  ACCESS_TITLE: { ko: '암호를 입력하세요', en: 'Enter password' },
+  ACCESS_PLACEHOLDER: { ko: '암호', en: 'Password' },
+  ACCESS_SUBMIT: { ko: '확인', en: 'Submit' },
+  ACCESS_ERROR: { ko: '암호가 올바르지 않습니다', en: 'Incorrect password' },
 };
 
 const CALC_DEFS = {
@@ -202,6 +209,9 @@ function applyStaticLabels() {
 
   document.querySelectorAll('[data-label]').forEach((el) => {
     el.textContent = labelText(el.dataset.label);
+  });
+  document.querySelectorAll('[data-label-placeholder]').forEach((el) => {
+    el.placeholder = labelText(el.dataset.labelPlaceholder);
   });
   document.querySelectorAll('[data-calc-name]').forEach((el) => {
     el.textContent = CALC_DEFS[el.dataset.calcName].name[LANG];
@@ -688,48 +698,110 @@ function roundForInput(value) {
   return String(Math.round(value * 10000) / 10000);
 }
 
-document.addEventListener('input', (e) => {
-  const el = e.target;
-  if (!el.classList || !el.classList.contains('input')) return;
-  const screen = el.closest('.screen[data-calc]');
-  if (!screen) return;
-  const calcId = screen.dataset.calc;
+export async function hashHex(str) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, '0')).join('');
+}
 
-  if (el.id === `${calcId}-camera`) {
-    applyCameraSelection(calcId, el.value);
-    persist();
+export function isUnlockValid(record, nowMs) {
+  return !!record && typeof record.until === 'number' && record.until > nowMs;
+}
+
+function readAccessRecord() {
+  try {
+    return JSON.parse(localStorage.getItem(ACCESS_STORAGE_KEY) || 'null');
+  } catch (e) {
+    return null;
+  }
+}
+
+function unlockAccess() {
+  try {
+    localStorage.setItem(ACCESS_STORAGE_KEY, JSON.stringify({ until: Date.now() + ACCESS_TTL_MS }));
+  } catch (e) {}
+}
+
+function showGate(show) {
+  const el = document.getElementById('access-gate');
+  if (el) el.hidden = !show;
+}
+
+function showAccessError(show) {
+  const el = document.getElementById('access-error');
+  if (el) el.classList.toggle('visible', show);
+}
+
+async function submitAccess() {
+  const input = document.getElementById('access-password');
+  const value = input ? input.value : '';
+  const hash = await hashHex(value);
+  if (hash === ACCESS_SHA256) {
+    unlockAccess();
+    showAccessError(false);
+    showGate(false);
+  } else {
+    showAccessError(true);
+  }
+}
+
+function initAccessGate() {
+  if (!ACCESS_SHA256) {
+    console.info('[access-gate] ACCESS_SHA256 미설정 — 게이트 비활성(fail-open)');
     return;
   }
-  if (['rw', 'rh', 'pxs'].some((key) => el.id === `${calcId}-${key}`)) {
-    const sel = document.getElementById(`${calcId}-camera`);
-    if (sel && sel.value !== '') sel.value = '';
-  }
+  if (isUnlockValid(readAccessRecord(), Date.now())) return;
+  showGate(true);
+}
 
-  runCompute(calcId);
-  persist();
-});
+if (typeof document !== 'undefined') {
+  document.addEventListener('input', (e) => {
+    const el = e.target;
+    if (!el.classList || !el.classList.contains('input')) return;
+    const screen = el.closest('.screen[data-calc]');
+    if (!screen) return;
+    const calcId = screen.dataset.calc;
 
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-action]');
-  if (!btn) return;
-  const action = btn.dataset.action;
-  if (action === 'open') {
-    backTarget = null;
-    showScreen(btn.dataset.target);
-  } else if (action === 'home') {
-    const target = backTarget;
-    backTarget = null;
-    showScreen(target || 'home');
-  } else if (action === 'set-lang') setLang(btn.dataset.lang);
-  else if (action === 'set-mode') {
-    const calcId = btn.closest('.screen[data-calc]')?.dataset.calc;
-    if (calcId) setMode(calcId, btn.dataset.mode);
-  }
-});
+    if (el.id === `${calcId}-camera`) {
+      applyCameraSelection(calcId, el.value);
+      persist();
+      return;
+    }
+    if (['rw', 'rh', 'pxs'].some((key) => el.id === `${calcId}-${key}`)) {
+      const sel = document.getElementById(`${calcId}-camera`);
+      if (sel && sel.value !== '') sel.value = '';
+    }
 
-const initialScreen = restore();
-applyStaticLabels();
-updateDateBadges();
-computeAll();
-showScreen(initialScreen);
-loadCameras();
+    runCompute(calcId);
+    persist();
+  });
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const action = btn.dataset.action;
+    if (action === 'open') {
+      backTarget = null;
+      showScreen(btn.dataset.target);
+    } else if (action === 'home') {
+      const target = backTarget;
+      backTarget = null;
+      showScreen(target || 'home');
+    } else if (action === 'set-lang') setLang(btn.dataset.lang);
+    else if (action === 'set-mode') {
+      const calcId = btn.closest('.screen[data-calc]')?.dataset.calc;
+      if (calcId) setMode(calcId, btn.dataset.mode);
+    } else if (action === 'access-submit') submitAccess();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.target.id === 'access-password') submitAccess();
+  });
+
+  const initialScreen = restore();
+  applyStaticLabels();
+  updateDateBadges();
+  computeAll();
+  initAccessGate();
+  showScreen(initialScreen);
+  loadCameras();
+}

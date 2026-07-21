@@ -222,6 +222,29 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
 .chain-btn:hover:not(:disabled) { background: rgba(245, 244, 241, .12); }
 .chain-btn:disabled { opacity: .4; cursor: not-allowed; }
 
+/* — 접속 게이트 — */
+.access-gate {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-text); padding: 24px;
+}
+.access-gate[hidden] { display: none; }
+.access-card {
+  width: 100%; max-width: 340px; min-width: 0;
+  display: flex; flex-direction: column; align-items: stretch; gap: 14px;
+  text-align: center;
+}
+.access-logo { width: 72px; align-self: center; filter: invert(1); }
+.access-title { color: var(--color-bg); font-size: 18px; }
+.access-error {
+  display: none; margin: 0; font-size: 12px; color: var(--color-accent-200); text-align: left;
+}
+.access-error.visible { display: block; }
+.access-submit {
+  background: var(--color-accent); color: var(--color-text); font-weight: 600; padding: 12px 16px;
+}
+.access-submit:hover { background: var(--color-accent-200); }
+
 /* — 반응형 — */
 @media (max-width: 380px) {
   .field-grid { gap: 10px; }
