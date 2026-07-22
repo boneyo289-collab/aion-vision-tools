@@ -28,6 +28,17 @@
   --font-body: system-ui, -apple-system, "Segoe UI", "Noto Sans KR", sans-serif;
   --font-heading: system-ui, -apple-system, "Segoe UI", "Noto Sans KR", sans-serif;
 
+  --font-3xs: 11px;
+  --font-2xs: 12px;
+  --font-xs: 13px;
+  --font-sm: 14px;
+  --font-md: 16px;
+  --font-lg: 17px;
+  --font-xl: 20px;
+  --font-2xl: 28px;
+  --font-date: 18px;
+  --font-result: 28px;
+
   --space-1: 4.4px;
   --space-2: 8.8px;
   --space-3: 13.2px;
@@ -48,7 +59,7 @@ body {
   background: var(--color-surface);
   color: var(--color-text);
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: var(--font-md);
   line-height: 1.55;
 }
 
@@ -66,6 +77,7 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
   max-width: 600px;
   margin: 0 auto;
   min-height: 100vh;
+  min-height: 100dvh;
   background: var(--color-bg);
   display: flex;
   flex-direction: column;
@@ -79,30 +91,30 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   cursor: pointer; text-decoration: none; border: none;
-  font-family: var(--font-heading); font-size: 13px; line-height: 1.2;
+  font-family: var(--font-heading); font-size: var(--font-sm); line-height: 1.2;
   color: var(--color-text); background: transparent;
   padding: 7px 13px; border-radius: 999px;
 }
 .btn-secondary { border: 1px solid var(--color-divider); background: transparent; }
 .btn-secondary:hover { background: rgba(20, 20, 19, .07); }
-.btn-icon { width: 44px; height: 44px; padding: 0; flex: none; font-size: 16px; }
+.btn-icon { width: 44px; height: 44px; padding: 0; flex: none; font-size: var(--font-md); }
 
 /* — 필드/입력 — */
 .field { margin: 0; }
 .field > label {
-  display: block; font-size: 12px; margin-bottom: 5px; color: var(--color-neutral-700);
+  display: block; font-size: var(--font-2xs); line-height: 1.2; margin-bottom: 2px; color: var(--color-neutral-700);
 }
 .field-input { position: relative; min-width: 0; }
 .input {
-  width: 100%; min-width: 0; min-height: 48px; padding: 6px 52px 6px 14px; font: inherit;
-  font-size: 14px; font-weight: 600; color: var(--color-text); caret-color: var(--color-accent);
+  width: 100%; min-width: 0; min-height: 38px; padding: 5px 52px 5px 14px; font: inherit;
+  font-size: var(--font-md); font-weight: 600; color: var(--color-text); caret-color: var(--color-accent);
   background: var(--color-surface); border: 1px solid var(--color-divider); border-radius: 999px;
 }
 .input:hover { border-color: rgba(20, 20, 19, .45); }
 .input:focus-visible { border-color: var(--color-accent); outline-offset: 0; }
 .unit-label {
   position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-  font-size: 11px; color: var(--color-neutral-600); pointer-events: none;
+  font-size: var(--font-2xs); color: var(--color-neutral-600); pointer-events: none;
 }
 
 /* — 홈 화면 — */
@@ -114,17 +126,17 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
 .home-logo-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .home-logo { width: 90px; filter: invert(1); }
 .home-header-right { display: flex; align-items: center; gap: 12px; }
-.home-title { font-size: 27px; margin: 0 0 5px; color: var(--color-bg); }
-.home-sub { margin: 0; font-size: 13px; color: rgba(245, 244, 241, .6); }
+.home-title { font-size: var(--font-2xl); margin: 0 0 5px; color: var(--color-bg); }
+.home-sub { margin: 0; font-size: var(--font-sm); color: rgba(245, 244, 241, .6); }
 
-.date-badge { font-size: 11px; white-space: nowrap; }
+.date-badge { font-size: var(--font-date); font-weight: 600; white-space: nowrap; }
 .home-date { color: rgba(245, 244, 241, .55); }
 .calc-date { color: var(--color-neutral-600); padding-left: 8px; }
 
 .lang-seg { display: inline-flex; border: 1px solid rgba(245, 244, 241, .35); border-radius: 999px; overflow: hidden; }
 .lang-seg-btn {
   border: none; background: transparent; cursor: pointer; font: inherit;
-  padding: 5px 13px; font-size: 11px; font-weight: 600; color: rgba(245, 244, 241, .7);
+  padding: 5px 13px; font-size: var(--font-2xs); font-weight: 600; color: rgba(245, 244, 241, .7);
 }
 .lang-seg-btn.active { background: var(--color-accent); color: var(--color-text); }
 
@@ -140,34 +152,35 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
 .calc-card:hover { background: var(--color-neutral-100); }
 .calc-card-circle {
   width: 40px; height: 40px; flex: none; border-radius: 50%;
-  display: grid; place-items: center; font-family: var(--font-heading); font-size: 15px;
+  display: grid; place-items: center; font-family: var(--font-heading); font-size: var(--font-md);
 }
 .calc-card-circle.tint-a { background: var(--color-accent-100); color: var(--color-accent-700); }
 .calc-card-circle.tint-b { background: var(--color-accent-2-100); color: var(--color-accent-2-700); }
 .calc-card-text { flex: 1; }
-.calc-card-name { font-size: 15px; font-weight: 600; }
+.calc-card-name { font-size: var(--font-md); font-weight: 600; }
 .calc-card-arrow { color: var(--color-neutral-600); }
 
 .coming-soon {
   border: 1.5px dashed var(--color-neutral-400); border-radius: calc(var(--radius-lg) * 1.15);
-  padding: 16px; text-align: center; font-size: 12px; color: var(--color-neutral-600);
+  padding: 16px; text-align: center; font-size: var(--font-xs); color: var(--color-neutral-600);
 }
-.home-footer { padding: 14px 24px 22px; text-align: center; font-size: 11px; color: var(--color-neutral-600); }
+.home-footer { padding: 14px 24px 22px; text-align: center; font-size: var(--font-2xs); color: var(--color-neutral-600); }
 
 /* — 계산기 화면 — */
-.calc-header { display: flex; align-items: center; gap: 12px; padding: 18px 18px 12px; }
+.calc-header { display: flex; align-items: center; gap: 12px; padding: 12px 16px 8px; }
 .calc-title { flex: 1; min-width: 0; }
 .calc-kicker {
-  font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--color-accent-700);
+  font-size: var(--font-3xs); letter-spacing: .1em; text-transform: uppercase; color: var(--color-accent-700);
+  line-height: 1.2;
 }
-.calc-name { font-family: var(--font-heading); font-size: 19px; }
+.calc-name { font-family: var(--font-heading); font-size: var(--font-lg); line-height: 1.25; }
 
-.calc-body { flex: 1; padding: 10px 18px 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.calc-body { flex: 1; padding: 6px 16px 10px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-width: 0; }
 .field-grid .field { min-width: 0; }
 .field-grid .field.span-2 { grid-column: span 2; }
 
-.calc-note { margin: 0; font-size: 12px; line-height: 1.6; color: var(--color-neutral-600); }
+.calc-note { margin: 0; font-size: var(--font-3xs); line-height: 1.35; color: var(--color-neutral-600); }
 
 .mode-seg {
   display: inline-flex; align-self: flex-start; border: 1px solid var(--color-divider);
@@ -175,32 +188,32 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
 }
 .mode-seg-btn {
   border: none; background: transparent; cursor: pointer; font: inherit;
-  padding: 6px 14px; font-size: 12px; font-weight: 600; color: var(--color-neutral-700);
+  padding: 4px 12px; font-size: var(--font-xs); font-weight: 600; color: var(--color-neutral-700);
 }
 .mode-seg-btn.active { background: var(--color-accent); color: var(--color-text); }
 [data-mode-group][hidden] { display: none; }
 
 /* — 결과 패널 — */
 .result-panel {
-  position: sticky; bottom: 0; margin-top: auto;
+  margin-top: 10px;
   background: var(--color-text); color: var(--color-bg);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  padding: 20px 22px 24px; box-shadow: 0 -6px 20px rgba(20, 20, 19, .18);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px 16px; box-shadow: 0 -6px 20px rgba(20, 20, 19, .18);
 }
 .result-kicker {
-  font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-  color: rgba(245, 244, 241, .55); margin-bottom: 10px;
+  font-size: var(--font-3xs); letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(245, 244, 241, .55); margin-bottom: 6px;
 }
 .result-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 16px; margin-bottom: 16px;
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 8px 10px; margin-bottom: 10px;
 }
 .result-label {
-  font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--color-accent); margin-bottom: 2px;
+  font-size: var(--font-3xs); letter-spacing: .1em; text-transform: uppercase;
+  color: var(--color-accent); margin-bottom: 1px; line-height: 1.2;
 }
-.result-value { font-family: var(--font-heading); font-size: 23px; line-height: 1.15; }
-.result-unit { font-size: 12px; color: rgba(245, 244, 241, .55); }
+.result-value { font-family: var(--font-heading); font-size: var(--font-result); font-weight: 700; line-height: 1.15; }
+.result-unit { font-size: var(--font-xs); color: rgba(245, 244, 241, .55); }
 
 .result-flash { animation: result-flash .4s ease; }
 @keyframes result-flash {
@@ -208,16 +221,16 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
   100% { color: inherit; }
 }
 .result-error {
-  display: none; font-size: 13px; line-height: 1.5; color: var(--color-accent-200);
+  display: none; font-size: var(--font-sm); line-height: 1.5; color: var(--color-accent-200);
   margin: 0 0 12px;
 }
 .result-error.visible { display: block; }
 
-.chain-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.chain-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 .chain-btn {
-  flex: 1 1 auto; min-height: 44px; min-width: 120px;
+  flex: 1 1 auto; min-height: 36px; min-width: 110px;
   border: 1px solid rgba(245, 244, 241, .4); color: var(--color-bg);
-  background: transparent; font-size: 12px; padding: 8px 12px;
+  background: transparent; font-size: var(--font-xs); padding: 6px 10px;
 }
 .chain-btn:hover:not(:disabled) { background: rgba(245, 244, 241, .12); }
 .chain-btn:disabled { opacity: .4; cursor: not-allowed; }
@@ -235,9 +248,9 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
   text-align: center;
 }
 .access-logo { width: 72px; align-self: center; filter: invert(1); }
-.access-title { color: var(--color-bg); font-size: 18px; }
+.access-title { color: var(--color-bg); font-size: var(--font-xl); }
 .access-error {
-  display: none; margin: 0; font-size: 12px; color: var(--color-accent-200); text-align: left;
+  display: none; margin: 0; font-size: var(--font-xs); color: var(--color-accent-200); text-align: left;
 }
 .access-error.visible { display: block; }
 .access-submit {
@@ -248,6 +261,6 @@ input.input { -moz-appearance: textfield; appearance: textfield; }
 /* — 반응형 — */
 @media (max-width: 380px) {
   .field-grid { gap: 10px; }
-  .calc-body { padding: 10px 14px 16px; }
-  .calc-header { padding: 16px 14px 10px; }
+  .calc-body { padding: 6px 14px 8px; gap: 6px; }
+  .calc-header { padding: 10px 14px 6px; }
 }

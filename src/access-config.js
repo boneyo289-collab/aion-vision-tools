@@ -5,4 +5,5 @@
 //
 // 이 파일의 해시만 고쳐 암호를 바꾼다. 바꾼 뒤 deploy.ps1로 재배포해야 공개 URL에 반영된다.
 // 빈 문자열이면 게이트가 비활성화되어 앱이 정상 개방된다(fail-open).
-export const ACCESS_SHA256 = '3038bfb575bee6a0e61945eff8784835bb2c720634e42734678c083994b7f018';
+export const ACCESS_SHA256 = '';
+

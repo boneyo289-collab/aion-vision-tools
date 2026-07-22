@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AION Vision Tools — 머신비전 계산기</title>
-<link rel="stylesheet" href="assets/styles.css?v=202607220924">
+<link rel="stylesheet" href="assets/styles.css?v=202607221822">
 </head>
 <body>
 <div id="access-gate" class="access-gate" hidden>
@@ -111,14 +111,14 @@
         <div class="field">
           <label for="fov-pxs" data-field-label="fov:input:pxs"></label>
           <div class="field-input">
-            <input class="input" id="fov-pxs" type="number" inputmode="decimal" step="any" value="3.45">
+            <input class="input" id="fov-pxs" type="text" inputmode="decimal" step="any" value="3.45">
             <span class="unit-label">㎛</span>
           </div>
         </div>
         <div class="field">
           <label for="fov-f" data-field-label="fov:input:f"></label>
           <div class="field-input">
-            <input class="input" id="fov-f" type="number" inputmode="decimal" step="any" value="16">
+            <input class="input" id="fov-f" type="text" inputmode="decimal" step="any" value="16">
             <span class="unit-label">mm</span>
           </div>
         </div>
@@ -127,14 +127,14 @@
         <div class="field">
           <label for="fov-rw" data-field-label="fov:input:rw"></label>
           <div class="field-input">
-            <input class="input" id="fov-rw" type="number" inputmode="decimal" step="any" value="2448">
+            <input class="input" id="fov-rw" type="text" inputmode="decimal" step="any" value="2448">
             <span class="unit-label">px</span>
           </div>
         </div>
         <div class="field">
           <label for="fov-rh" data-field-label="fov:input:rh"></label>
           <div class="field-input">
-            <input class="input" id="fov-rh" type="number" inputmode="decimal" step="any" value="2048">
+            <input class="input" id="fov-rh" type="text" inputmode="decimal" step="any" value="2048">
             <span class="unit-label">px</span>
           </div>
         </div>
@@ -143,7 +143,7 @@
         <div class="field span-2">
           <label for="fov-wd" data-field-label="fov:input:wd"></label>
           <div class="field-input">
-            <input class="input" id="fov-wd" type="number" inputmode="decimal" step="any" value="300">
+            <input class="input" id="fov-wd" type="text" inputmode="decimal" step="any" value="300">
             <span class="unit-label">mm</span>
           </div>
         </div>
@@ -152,7 +152,7 @@
         <div class="field span-2">
           <label for="fov-res" data-field-label="fov:input:res"></label>
           <div class="field-input">
-            <input class="input" id="fov-res" type="number" inputmode="decimal" step="any" value="65">
+            <input class="input" id="fov-res" type="text" inputmode="decimal" step="any" value="65">
             <span class="unit-label">㎛/px</span>
           </div>
         </div>
@@ -203,14 +203,14 @@
         <div class="field">
           <label for="exposure-speed" data-field-label="exposure:input:speed"></label>
           <div class="field-input">
-            <input class="input" id="exposure-speed" type="number" inputmode="decimal" step="any" value="500">
+            <input class="input" id="exposure-speed" type="text" inputmode="decimal" step="any" value="500">
             <span class="unit-label">mm/s</span>
           </div>
         </div>
         <div class="field">
           <label for="exposure-r" data-field-label="exposure:input:r"></label>
           <div class="field-input">
-            <input class="input" id="exposure-r" type="number" inputmode="decimal" step="any" value="65">
+            <input class="input" id="exposure-r" type="text" inputmode="decimal" step="any" value="65">
             <span class="unit-label">㎛/px</span>
           </div>
         </div>
@@ -219,7 +219,7 @@
         <div class="field span-2">
           <label for="exposure-fps" data-field-label="exposure:input:fps"></label>
           <div class="field-input">
-            <input class="input" id="exposure-fps" type="number" inputmode="decimal" step="any" value="100">
+            <input class="input" id="exposure-fps" type="text" inputmode="decimal" step="any" value="100">
             <span class="unit-label">fps</span>
           </div>
         </div>
@@ -228,7 +228,7 @@
         <div class="field span-2">
           <label for="exposure-margin" data-field-label="exposure:input:margin"></label>
           <div class="field-input">
-            <input class="input" id="exposure-margin" type="number" inputmode="decimal" step="any" value="6">
+            <input class="input" id="exposure-margin" type="text" inputmode="decimal" step="any" value="6">
             <span class="unit-label">㎲</span>
           </div>
         </div>
@@ -276,24 +276,26 @@
       </div>
       <div class="field-grid">
         <div class="field">
-          <label for="focal-pxs" data-field-label="focal:input:pxs"></label>
-          <div class="field-input">
-            <input class="input" id="focal-pxs" type="number" inputmode="decimal" step="any" value="3.45">
-            <span class="unit-label">㎛</span>
-          </div>
-        </div>
-        <div class="field">
           <label for="focal-rw" data-field-label="focal:input:rw"></label>
           <div class="field-input">
-            <input class="input" id="focal-rw" type="number" inputmode="decimal" step="any" value="2448">
+            <input class="input" id="focal-rw" type="text" inputmode="decimal" step="any" value="2448">
             <span class="unit-label">px</span>
           </div>
         </div>
         <div class="field">
           <label for="focal-rh" data-field-label="focal:input:rh"></label>
           <div class="field-input">
-            <input class="input" id="focal-rh" type="number" inputmode="decimal" step="any" value="2048">
+            <input class="input" id="focal-rh" type="text" inputmode="decimal" step="any" value="2048">
             <span class="unit-label">px</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-grid">
+        <div class="field span-2">
+          <label for="focal-pxs" data-field-label="focal:input:pxs"></label>
+          <div class="field-input">
+            <input class="input" id="focal-pxs" type="text" inputmode="decimal" step="any" value="3.45">
+            <span class="unit-label">㎛</span>
           </div>
         </div>
       </div>
@@ -301,7 +303,7 @@
         <div class="field span-2">
           <label for="focal-f" data-field-label="focal:input:f"></label>
           <div class="field-input">
-            <input class="input" id="focal-f" type="number" inputmode="decimal" step="any" value="16">
+            <input class="input" id="focal-f" type="text" inputmode="decimal" step="any" value="16">
             <span class="unit-label">mm</span>
           </div>
         </div>
@@ -310,7 +312,7 @@
         <div class="field span-2">
           <label for="focal-wd" data-field-label="focal:input:wd"></label>
           <div class="field-input">
-            <input class="input" id="focal-wd" type="number" inputmode="decimal" step="any" value="300">
+            <input class="input" id="focal-wd" type="text" inputmode="decimal" step="any" value="300">
             <span class="unit-label">mm</span>
           </div>
         </div>
@@ -319,7 +321,7 @@
         <div class="field span-2">
           <label for="focal-fov" data-field-label="focal:input:fov"></label>
           <div class="field-input">
-            <input class="input" id="focal-fov" type="number" inputmode="decimal" step="any" value="150">
+            <input class="input" id="focal-fov" type="text" inputmode="decimal" step="any" value="150">
             <span class="unit-label">mm</span>
           </div>
         </div>
@@ -366,28 +368,28 @@
         <div class="field">
           <label for="dof-n" data-field-label="dof:input:n"></label>
           <div class="field-input">
-            <input class="input" id="dof-n" type="number" inputmode="decimal" step="any" value="4">
+            <input class="input" id="dof-n" type="text" inputmode="decimal" step="any" value="4">
             <span class="unit-label">F</span>
           </div>
         </div>
         <div class="field">
           <label for="dof-pxs" data-field-label="dof:input:pxs"></label>
           <div class="field-input">
-            <input class="input" id="dof-pxs" type="number" inputmode="decimal" step="any" value="3.45">
+            <input class="input" id="dof-pxs" type="text" inputmode="decimal" step="any" value="3.45">
             <span class="unit-label">㎛</span>
           </div>
         </div>
         <div class="field">
           <label for="dof-k" data-field-label="dof:input:k"></label>
           <div class="field-input">
-            <input class="input" id="dof-k" type="number" inputmode="decimal" step="any" value="2">
+            <input class="input" id="dof-k" type="text" inputmode="decimal" step="any" value="2">
             <span class="unit-label" data-field-unit="dof:input:k"></span>
           </div>
         </div>
         <div class="field">
           <label for="dof-m" data-field-label="dof:input:m"></label>
           <div class="field-input">
-            <input class="input" id="dof-m" type="number" inputmode="decimal" step="any" value="0.056">
+            <input class="input" id="dof-m" type="text" inputmode="decimal" step="any" value="0.056">
             <span class="unit-label" data-field-unit="dof:input:m"></span>
           </div>
         </div>
@@ -396,14 +398,14 @@
         <div class="field">
           <label for="dof-lambda" data-field-label="dof:input:lambda"></label>
           <div class="field-input">
-            <input class="input" id="dof-lambda" type="number" inputmode="decimal" step="any" value="550">
+            <input class="input" id="dof-lambda" type="text" inputmode="decimal" step="any" value="550">
             <span class="unit-label">nm</span>
           </div>
         </div>
         <div class="field">
           <label for="dof-na" data-field-label="dof:input:na"></label>
           <div class="field-input">
-            <input class="input" id="dof-na" type="number" inputmode="decimal" step="any" value="0.1">
+            <input class="input" id="dof-na" type="text" inputmode="decimal" step="any" value="0.1">
             <span class="unit-label" data-field-unit="dof:input:na"></span>
           </div>
         </div>
@@ -448,14 +450,14 @@
         <div class="field">
           <label for="mag-pxs" data-field-label="mag:input:pxs"></label>
           <div class="field-input">
-            <input class="input" id="mag-pxs" type="number" inputmode="decimal" step="any" value="3.45">
+            <input class="input" id="mag-pxs" type="text" inputmode="decimal" step="any" value="3.45">
             <span class="unit-label">㎛</span>
           </div>
         </div>
         <div class="field">
           <label for="mag-res" data-field-label="mag:input:res"></label>
           <div class="field-input">
-            <input class="input" id="mag-res" type="number" inputmode="decimal" step="any" value="61.24">
+            <input class="input" id="mag-res" type="text" inputmode="decimal" step="any" value="61.24">
             <span class="unit-label">㎛/px</span>
           </div>
         </div>
@@ -464,14 +466,14 @@
         <div class="field">
           <label for="mag-s" data-field-label="mag:input:s"></label>
           <div class="field-input">
-            <input class="input" id="mag-s" type="number" inputmode="decimal" step="any" value="8.45">
+            <input class="input" id="mag-s" type="text" inputmode="decimal" step="any" value="8.45">
             <span class="unit-label">mm</span>
           </div>
         </div>
         <div class="field">
           <label for="mag-fov" data-field-label="mag:input:fov"></label>
           <div class="field-input">
-            <input class="input" id="mag-fov" type="number" inputmode="decimal" step="any" value="150">
+            <input class="input" id="mag-fov" type="text" inputmode="decimal" step="any" value="150">
             <span class="unit-label">mm</span>
           </div>
         </div>
@@ -505,14 +507,14 @@
         <div class="field">
           <label for="linescan-speed" data-field-label="linescan:input:speed"></label>
           <div class="field-input">
-            <input class="input" id="linescan-speed" type="number" inputmode="decimal" step="any" value="1000">
+            <input class="input" id="linescan-speed" type="text" inputmode="decimal" step="any" value="1000">
             <span class="unit-label">mm/s</span>
           </div>
         </div>
         <div class="field">
           <label for="linescan-r" data-field-label="linescan:input:r"></label>
           <div class="field-input">
-            <input class="input" id="linescan-r" type="number" inputmode="decimal" step="any" value="97.65625">
+            <input class="input" id="linescan-r" type="text" inputmode="decimal" step="any" value="97.65625">
             <span class="unit-label">㎛/px</span>
           </div>
         </div>
@@ -536,6 +538,6 @@
   </section>
 
 </div>
-<script type="module" src="src/app.js?v=202607220924"></script>
+<script type="module" src="src/app.js?v=202607221822"></script>
 </body>
 </html>
