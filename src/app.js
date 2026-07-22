@@ -27,7 +27,7 @@ const LABELS = {
   FOOTER_SUB: { ko: '사내용 계산 도구', en: 'Internal engineering tool' },
   MODE_SPEED: { ko: '속도·분해능', en: 'Speed · Resolution' },
   MODE_FPS: { ko: 'Frame rate', en: 'Frame rate' },
-  MODE_FOV_LENS: { ko: '렌즈·WD', en: 'Lens · WD' },
+  MODE_FOV_LENS: { ko: 'Focal Length·WD', en: 'Focal Length · WD' },
   MODE_FOV_RES: { ko: '분해능·픽셀수', en: 'Resolution · Pixel count' },
   MODE_DOF_COC: { ko: 'CoC·배율', en: 'CoC · Magnification' },
   MODE_DOF_WAVE: { ko: '파장·NA', en: 'Wavelength · NA' },
@@ -46,7 +46,7 @@ const CALC_DEFS = {
   fov: {
     num: '01',
     kicker: '01 · Optics',
-    name: { ko: 'FOV 계산', en: 'FOV Calculation' },
+    name: { ko: 'FOV, 분해능, 배율 계산', en: 'FOV, Resolution, Magnification' },
     note: {
       ko: 'WD는 렌즈 주점 기준입니다. 실제 렌즈 카탈로그의 WD(렌즈 앞면 기준)와는 차이가 있으니 최종 선정은 렌즈 사양서를 확인하세요.',
       en: 'WD is measured from the lens principal point. This differs from the WD in lens catalogs (measured from the front of the lens) — confirm the final choice against the lens datasheet.',
@@ -142,18 +142,18 @@ const CALC_DEFS = {
   linescan: {
     num: '06',
     kicker: '06 · Line scan',
-    name: { ko: 'Linerate 계산', en: 'Line Rate Calculation' },
+    name: { ko: 'LineRate 계산', en: 'LineRate Calculation' },
     note: {
-      ko: '정사각 픽셀 가정: 스캔 방향 픽셀 크기는 라인레이트가 결정합니다(가로=세로 샘플링).',
-      en: 'Assumes square pixels: the line rate determines the scan-direction pixel size (H = V sampling).',
+      ko: '정사각 픽셀 가정: 스캔 방향 픽셀 크기는 LineRate가 결정합니다(가로=세로 샘플링).',
+      en: 'Assumes square pixels: the LineRate determines the scan-direction pixel size (H = V sampling).',
     },
     inputs: [
-      { key: 'speed', label: { ko: '반송 속도', en: 'Conveyor speed' }, unit: 'mm/s' },
+      { key: 'speed', label: { ko: '이동 속도', en: 'Travel speed' }, unit: 'mm/s' },
       { key: 'r', label: { ko: '분해능', en: 'Resolution' }, unit: '㎛/px' },
     ],
     results: [
-      { key: 'rate', label: { ko: '라인레이트', en: 'Line rate' }, unit: 'kHz' },
-      { key: 'period', label: { ko: '라인당 시간', en: 'Time per line' }, unit: '㎲' },
+      { key: 'rate', label: { ko: 'LineRate', en: 'LineRate' }, unit: 'kHz' },
+      { key: 'period', label: { ko: 'LineRate 간격', en: 'LineRate interval' }, unit: '㎲' },
     ],
   },
 };
@@ -183,7 +183,7 @@ let lastResults = { fov: null, focal: null, dof: null, mag: null };
 
 const CHAINS = [
   { from: 'fov', fromMode: 'lens', valueKey: 'r', to: 'exposure', toMode: 'speed', toField: 'r', label: { ko: '→ Exposure', en: '→ Exposure' } },
-  { from: 'fov', fromMode: 'lens', valueKey: 'r', to: 'linescan', toField: 'r', label: { ko: '→ Linerate', en: '→ Linerate' } },
+  { from: 'fov', fromMode: 'lens', valueKey: 'r', to: 'linescan', toField: 'r', label: { ko: '→ LineRate', en: '→ LineRate' } },
   { from: 'fov', fromMode: 'lens', valueKey: 'm', to: 'dof', toMode: 'coc', toField: 'm', label: { ko: '→ 심도', en: '→ DOF' } },
   { from: 'fov', fromMode: 'res', valueKey: 'major', to: 'focal', toField: 'fov', label: { ko: '→ WD', en: '→ WD' } },
   { from: 'fov', fromMode: 'res', valueKey: 'major', to: 'mag', toMode: 'fov', toField: 'fov', label: { ko: '→ 배율', en: '→ Magnification' } },
