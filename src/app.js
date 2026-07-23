@@ -1,4 +1,5 @@
 import * as formulas from './formulas.js';
+import { solveOptics } from './optics-core.js';
 import { parseCamerasCsv } from './cameras.js';
 import { ACCESS_SHA256 } from './access-config.js';
 
@@ -27,8 +28,10 @@ const LABELS = {
   FOOTER_SUB: { ko: '사내용 계산 도구', en: 'Internal engineering tool' },
   MODE_SPEED: { ko: '속도·분해능', en: 'Speed · Resolution' },
   MODE_FPS: { ko: 'Frame rate', en: 'Frame rate' },
-  MODE_FOV_LENS: { ko: 'Focal Length·WD', en: 'Focal Length · WD' },
-  MODE_FOV_RES: { ko: '분해능·픽셀수', en: 'Resolution · Pixel count' },
+  MODE_FOV_TFOV: { ko: '목표 FOV', en: 'Target FOV' },
+  MODE_FOV_RES: { ko: '목표 분해능', en: 'Target resolution' },
+  MODE_FOV_MAG: { ko: '배율', en: 'Magnification' },
+  MODE_FOV_LENS: { ko: '렌즈 (f·WD)', en: 'Lens (f · WD)' },
   MODE_DOF_COC: { ko: 'CoC·배율', en: 'CoC · Magnification' },
   MODE_DOF_WAVE: { ko: '파장·NA', en: 'Wavelength · NA' },
   MODE_FOCAL_WD: { ko: 'WD 구하기', en: 'Find WD' },
@@ -46,10 +49,10 @@ const CALC_DEFS = {
   fov: {
     num: '01',
     kicker: '01 · Optics',
-    name: { ko: 'FOV, 분해능, 배율 계산', en: 'FOV, Resolution, Magnification' },
+    name: { ko: '광학 — FOV·분해능·배율·WD/Focal', en: 'Optics — FOV · Resolution · Magnification · WD/Focal' },
     note: {
-      ko: 'WD는 렌즈 주점 기준입니다. 실제 렌즈 카탈로그의 WD(렌즈 앞면 기준)와는 차이가 있으니 최종 선정은 렌즈 사양서를 확인하세요.',
-      en: 'WD is measured from the lens principal point. This differs from the WD in lens catalogs (measured from the front of the lens) — confirm the final choice against the lens datasheet.',
+      ko: 'WD는 렌즈 주점 기준입니다. 실제 렌즈 카탈로그의 WD(렌즈 앞면 기준)와는 차이가 있으니 최종 선정은 렌즈 사양서를 확인하세요. Focal Length·WD는 선택 입력입니다 — 하나만 채우면 나머지를 계산합니다(렌즈 모드는 둘 다 입력).',
+      en: 'WD is measured from the lens principal point. This differs from the WD in lens catalogs (measured from the front of the lens) — confirm the final choice against the lens datasheet. Focal Length and WD are optional — fill in just one to derive the other (the Lens mode uses both).',
     },
     inputs: [
       { key: 'pxs', label: { ko: '픽셀사이즈', en: 'Pixel size' }, unit: '㎛' },
@@ -57,13 +60,20 @@ const CALC_DEFS = {
       { key: 'rw', label: { ko: '해상도 가로', en: 'Resolution H' }, unit: 'px' },
       { key: 'rh', label: { ko: '해상도 세로', en: 'Resolution V' }, unit: 'px' },
       { key: 'wd', label: { ko: 'WD', en: 'WD' }, unit: 'mm' },
+      { key: 'ftgt', label: { ko: '목표 FOV', en: 'Target FOV' }, unit: 'mm' },
       { key: 'res', label: { ko: '분해능', en: 'Resolution' }, unit: '㎛/px' },
+      { key: 'm', label: { ko: '배율', en: 'Magnification' }, unit: { ko: '배', en: '×' } },
     ],
     results: [
       { key: 'major', label: { ko: 'FOV 장축', en: 'FOV major axis' }, unit: 'mm' },
       { key: 'minor', label: { ko: 'FOV 단축', en: 'FOV minor axis' }, unit: 'mm' },
       { key: 'r', label: { ko: '분해능', en: 'Resolution' }, unit: '㎛/px' },
       { key: 'm', label: { ko: '배율', en: 'Magnification' }, unit: '' },
+      { key: 'wd', label: { ko: 'WD', en: 'WD' }, unit: 'mm' },
+      { key: 'f', label: { ko: 'Focal Length', en: 'Focal Length' }, unit: 'mm' },
+      { key: 'sensorw', label: { ko: '센서 가로', en: 'Sensor width' }, unit: 'mm' },
+      { key: 'sensorh', label: { ko: '센서 세로', en: 'Sensor height' }, unit: 'mm' },
+      { key: 'sensordiag', label: { ko: '센서 대각', en: 'Sensor diagonal' }, unit: 'mm' },
     ],
   },
   mag: {
@@ -166,14 +176,14 @@ const CAMERA_SCREENS = ['fov', 'focal'];
 
 const MODE_OPTIONS = {
   exposure: ['speed', 'fps'],
-  fov: ['lens', 'res'],
+  fov: ['tfov', 'res', 'mag', 'lens'],
   focal: ['wd', 'fl'],
   dof: ['coc', 'wave'],
   mag: ['pixels', 'fov'],
 };
 const modeState = {
   exposure: 'speed',
-  fov: 'lens',
+  fov: 'tfov',
   focal: 'wd',
   dof: 'coc',
   mag: 'pixels',
@@ -363,75 +373,77 @@ function runChain(chain) {
   showScreen(chain.to);
 }
 
-function computeFov() {
-  if (modeState.fov === 'res') return computeFovRes();
-  return computeFovLens();
-}
+const FOV_RESULT_KEYS = ['major', 'minor', 'r', 'm', 'wd', 'f', 'sensorw', 'sensorh', 'sensordiag'];
 
-function computeFovLens() {
-  const pxs = getNum('fov', 'pxs');
+function buildFovKnown() {
+  const mode = modeState.fov;
+  const known = {};
+  const set = (field, value) => {
+    if (Number.isFinite(value)) known[field] = value;
+  };
+
+  set('pxSizeUm', getNum('fov', 'pxs'));
+  set('pxCountH', getNum('fov', 'rw'));
+  set('pxCountV', getNum('fov', 'rh'));
+
   const f = getNum('fov', 'f');
-  const rw = getNum('fov', 'rw');
-  const rh = getNum('fov', 'rh');
   const wd = getNum('fov', 'wd');
+  const bothLensKnown = Number.isFinite(f) && Number.isFinite(wd);
+  // 배율 모드는 solver의 M 결정 경로가 ③(sensor+f+wd) → ④(M 직접) 순이라, f·WD가 둘 다 채워져
+  // 있으면 사용자가 입력한 M보다 f·WD 조합이 먼저 매칭돼 M을 가로챈다 — 그 경우에만 제외한다
+  // (목표FOV/목표분해능은 ①·②가 ③보다 먼저 매칭되므로 영향 없음, 렌즈 모드는 항상 포함)
+  if (mode !== 'mag' || !bothLensKnown) {
+    set('f', f);
+    set('wd', wd);
+  }
 
-  const fail = (code) => {
-    setResult('fov-result-major', '—');
-    setResult('fov-result-minor', '—');
-    setResult('fov-result-r', '—');
-    setResult('fov-result-m', '—');
-    showError('fov', code);
-    lastResults.fov = null;
-  };
+  if (mode === 'res') {
+    set('resolutionUm', getNum('fov', 'res'));
+  } else if (mode === 'tfov') {
+    set('fovMm', getNum('fov', 'ftgt'));
+  } else if (mode === 'mag') {
+    set('M', getNum('fov', 'm'));
+  }
 
-  const sensor = formulas.sensorSize({ pxSizeUm: pxs, pxCountH: rw, pxCountV: rh });
-  if (!sensor.ok) return fail(sensor.error);
-
-  const fovW = formulas.fovFromLens({ sensorMm: sensor.values.widthMm, f, wd });
-  if (!fovW.ok) return fail(fovW.error);
-
-  const fovH = formulas.fovFromLens({ sensorMm: sensor.values.heightMm, f, wd });
-  if (!fovH.ok) return fail(fovH.error);
-
-  const res = formulas.resolutionFromMag({ pxSizeUm: pxs, M: fovW.values.M });
-  if (!res.ok) return fail(res.error);
-
-  const major = Math.max(fovW.values.fovMm, fovH.values.fovMm);
-  const minor = Math.min(fovW.values.fovMm, fovH.values.fovMm);
-
-  showError('fov', null);
-  setResult('fov-result-major', fmt(major, 1));
-  setResult('fov-result-minor', fmt(minor, 1));
-  setResult('fov-result-r', fmt(res.values.resolutionUm, 2));
-  setResult('fov-result-m', fmt(fovW.values.M, 3));
-  lastResults.fov = { r: res.values.resolutionUm, m: fovW.values.M, major, minor };
+  return known;
 }
 
-function computeFovRes() {
-  const resolutionUm = getNum('fov', 'res');
-  const rw = getNum('fov', 'rw');
-  const rh = getNum('fov', 'rh');
+function computeFov() {
+  const known = buildFovKnown();
+  const result = solveOptics(known);
 
-  const fail = (code) => {
-    setResult('fov-result-major', '—');
-    setResult('fov-result-minor', '—');
-    showError('fov', code);
+  if (!result.ok) {
+    FOV_RESULT_KEYS.forEach((key) => setResult(`fov-result-${key}`, '—'));
+    showError('fov', result.error);
     lastResults.fov = null;
-  };
+    return;
+  }
 
-  const fovW = formulas.fovFromResolution({ resolutionUm, pxCount: rw });
-  if (!fovW.ok) return fail(fovW.error);
-
-  const fovH = formulas.fovFromResolution({ resolutionUm, pxCount: rh });
-  if (!fovH.ok) return fail(fovH.error);
-
-  const major = Math.max(fovW.values.fovMm, fovH.values.fovMm);
-  const minor = Math.min(fovW.values.fovMm, fovH.values.fovMm);
+  const v = result.values;
+  const w = v.fovWidthMm;
+  const h = v.fovHeightMm;
+  let major;
+  let minor;
+  if (Number.isFinite(w) && Number.isFinite(h)) {
+    major = Math.max(w, h);
+    minor = Math.min(w, h);
+  } else if (Number.isFinite(w)) {
+    major = w;
+  } else if (Number.isFinite(h)) {
+    major = h;
+  }
 
   showError('fov', null);
   setResult('fov-result-major', fmt(major, 1));
   setResult('fov-result-minor', fmt(minor, 1));
-  lastResults.fov = { major, minor };
+  setResult('fov-result-r', fmt(v.resolutionUm, 2));
+  setResult('fov-result-m', fmt(v.M, 4));
+  setResult('fov-result-wd', fmt(v.wdMm, 1));
+  setResult('fov-result-f', fmt(v.f, 1));
+  setResult('fov-result-sensorw', fmt(v.sensorWidthMm, 2));
+  setResult('fov-result-sensorh', fmt(v.sensorHeightMm, 2));
+  setResult('fov-result-sensordiag', fmt(v.sensorDiagonalMm, 2));
+  lastResults.fov = { major, minor, r: v.resolutionUm, m: v.M, wd: v.wdMm, f: v.f };
 }
 
 function populateCameraSelect(calcId) {
